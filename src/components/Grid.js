@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Square from './Square.js';
+import styles from '../App.css';
 
 export default class Grid extends Component {
   renderRow(width) {
@@ -13,14 +14,14 @@ export default class Grid extends Component {
   renderGrid(width,height) {
     var rows = [];
     for(var i=0; i<height; i++) {
-      rows.push(<div className="row" key={"row-"+ i}> { this.renderRow(width) }</div>);
+      rows.push(<div className={ styles.row } key={"row-"+ i}> { this.renderRow(width) }</div>);
     }
     return rows;
   }
 
   render() {
     return (
-      <div className="grid">
+      <div className={ styles.grid }>
         { this.renderGrid(16,16) }
       </div>
     );
