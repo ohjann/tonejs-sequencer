@@ -22,5 +22,14 @@ html {
   transition: background-color 0.05s ease;
 }
 .square.active {
+  background-color: #ffcc66;
+}
+.square.toggled {
   background-color: #FC4349;
+}
+
+.playpause {
+  width: 80px;
+  height: 80px;
+  background: blue;
 }

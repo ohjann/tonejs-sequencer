@@ -1,17 +1,20 @@
 import React from "react";
 import styles from "../App.css";
-import classnames from 'classnames/bind';
+import classNames from 'classnames/bind';
 import PropTypes from 'prop-types'
 
-const Square = ({ onClick, active }) => (
-  <div className={classnames(styles.square, { [styles.active]: active === true })}
+const Square = ({ onClick, active, toggled }) => (
+    <div className={classNames(styles.square,
+        { [styles.active]: active === true },
+        { [styles.toggled]: toggled === true },
+    )}
     onClick={onClick} >
   </div>
 );
 
 Square.propTypes = {
   onClick: PropTypes.func.isRequired,
-  active: PropTypes.bool.isRequired,
+  toggled: PropTypes.bool.isRequired,
 }
 
 export default Square;

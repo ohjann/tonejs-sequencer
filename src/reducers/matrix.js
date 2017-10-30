@@ -14,19 +14,31 @@ var initialState = {
     [0,0,0,0,0,0,0,0,0,0,0,0]
   ],
   activeColumn: 0,
+  currentlyRunning: false,
 };
 
 export default(state = initialState, action) => {
-//const matrix = (state = initialState, action) => {
   switch (action.type) {
     case 'NEXT_COLUMN':
-      return state.activeColumn + 1;
+      if(state.activeColumn < state.matrix[0].length - 1)
+        return Object.assign({}, state, {
+          activeColumn: state.activeColumn + 1
+        });
+      else
+        return Object.assign({}, state, {
+          activeColumn: 0
+        });
 
     case 'TOGGLE_CELL':
       let newMatrix = state.matrix.map(inner => inner.slice());
-      newMatrix[action.row][action.column] = 1 - newMatrix[action.row][action.column];
+      newMatrix[action.row][action.col] = 1 - newMatrix[action.row][action.col];
       return Object.assign({}, state, {
         matrix: newMatrix,
+      });
+
+    case 'TOGGLE_RUNNING':
+      return Object.assign({}, state, {
+        currentlyRunning: !state.currentlyRunning
       });
 
     default:

@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import Square from './Square'
 import styles from '../App.css';
 
-const Row = ({ row, rowIndex, onSquareClick }) => (
+const Row = ({ row, rowIndex, activeColumn, onSquareClick }) => (
   <div className={ styles.row }>
     { row.map((square, colIndex) => (
         <Square key={rowIndex+"-"+colIndex}
-          active={Boolean(square)}
+          toggled={Boolean(square)}
+          active={colIndex === activeColumn}
           onClick={() => onSquareClick(rowIndex, colIndex)}
         />
     ))}
