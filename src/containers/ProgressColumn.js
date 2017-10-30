@@ -9,9 +9,19 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
+  let running = null;
   return {
     playPause: () => {
-      dispatch(nextColumn());
+      if (!running) {
+        dispatch(nextColumn());
+        clearInterval(running);
+        running = setInterval(() => {
+          dispatch(nextColumn());
+        }, 700);
+      } else {
+        clearInterval(running);
+        running = null;
+      }
     }
   }
 }

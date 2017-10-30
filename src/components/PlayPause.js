@@ -1,11 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from '../App.css';
+import styles from '../PlayPause.css';
 
 const PlayPause = ({ currentlyRunning, playPause }) => (
   <div className={ styles.playpause }
-    onClick={playPause}
   >
+    <input type="checkbox" value="None" id="playpause" name="check" defaultChecked="checked"/>
+    <label htmlFor="playpause" tabIndex={1}
+      onClick={playPause}
+    ></label>
   </div>
 );
 

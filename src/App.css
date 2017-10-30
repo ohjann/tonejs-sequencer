@@ -1,13 +1,11 @@
 html {
   background: #2C3E50;
 }
-.App {
-}
 .row {
   height: 40px;
 }
 .grid {
-  width: 672px;
+  width: 504px;
   margin-left: auto;
   margin-right: auto;
   display: block;

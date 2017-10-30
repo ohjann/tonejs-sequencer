@@ -7,8 +7,8 @@ class App extends Component {
   render() {
     return (
       <div className={ styles.App }>
-        <ProgressColumn />
         <GridContainer />
+        <ProgressColumn />
       </div>
     );
   }
