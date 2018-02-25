@@ -12,8 +12,7 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch) {
   return {
     triggerAttackRelease: (note, time) => {
-      console.log(note, time);
-      synth.triggerAttackRelease(note, time);
+      dispatch(triggerAttack(note,time));
     }
   }
 }

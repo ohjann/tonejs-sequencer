@@ -7,7 +7,7 @@ const progressColumn = store => next => action => {
   else if (action.type === 'PAUSE') {
     clearInterval(store.getState().matrix.interval);
   }
-  return next(action);
+  next(action);
 };
 
 export default progressColumn;

@@ -7,13 +7,11 @@ var initialState = {
     decay: 0.1,
     sustain: 0.3,
     release: 1
-  } 
+  }
 }
 
 export default(state = initialState, action) => {
   switch (action.type) {
-    case 'SET_OSCILLATOR':
-      // TODO
     default:
       return state;
   }

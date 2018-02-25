@@ -1,10 +1,8 @@
-export const togglePlaying = () => {
-  console.log("toggle playing");
-  return {
-    type: 'TOGGLE_PLAYING'
-  }
-}
-
-export const triggerAttack = () => {
+export const triggerAttack = (note, time) => {
   console.log("trigger attack");
+  return {
+    type: 'TRIGGER_ATTACK',
+    note,
+    time,
+  }
 }
