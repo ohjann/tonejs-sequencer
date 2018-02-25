@@ -2,11 +2,14 @@ import synth from '../synth';
 
 const playSynth = store => next => action => {
   let state = store.getState().matrix
-  state.matrix.forEach((row) => {
-    if (row[state.activeColumn] === 1) {
-      synth.triggerAttackRelease("C4", "8n");
-    }
-  });
+  if (state.currentlyPlaying) {
+    state.matrix.forEach((row) => {
+      let index = state.activeColumn === row.length - 1 ? 0 : state.activeColumn + 1;
+      if (row[index] === 1) {
+        synth.triggerAttackRelease("C4", "8n");
+      }
+    });
+  }
   next(action);
 }
 
