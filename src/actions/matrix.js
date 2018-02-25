@@ -6,10 +6,16 @@ export const toggleCell = (row, col) => {
     col,
   };
 }
-export const toggleRunning = () => {
-  console.log("toggle running");
+export const play = () => {
+  console.log("playing");
   return {
-    type: 'TOGGLE_RUNNING'
+    type: 'PLAY'
+  }
+}
+export const pause = () => {
+  console.log("pause");
+  return {
+    type: 'PAUSE'
   }
 }
 export const nextColumn = () => {

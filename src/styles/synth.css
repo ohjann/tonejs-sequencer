@@ -1,0 +1,11 @@
+.synthButton {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  display: block;
+  background: red;
+  top: 0;
+}
+.synthButton.active {
+  background: blue;
+}

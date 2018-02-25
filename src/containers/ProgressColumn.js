@@ -1,26 +1,21 @@
 import { connect } from 'react-redux'
-import { nextColumn } from '../actions/matrix'
+import { play, pause } from '../actions/matrix'
 import PlayPause from '../components/PlayPause'
 
 function mapStateToProps(state, props) {
   return {
-    currentlyRunning: state.matrix.currentlyRunning
+    currentlyPlaying: state.matrix.currentlyPlaying
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  let running = null;
   return {
-    playPause: () => {
-      if (!running) {
-        dispatch(nextColumn());
-        clearInterval(running);
-        running = setInterval(() => {
-          dispatch(nextColumn());
-        }, 500);
+    playPause: (event) => {
+      // play button
+      if (event.target.control.checked) {
+        dispatch(play());
       } else {
-        clearInterval(running);
-        running = null;
+        dispatch(pause());
       }
     }
   }

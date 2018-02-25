@@ -14,13 +14,14 @@ var initialState = {
     [0,0,0,0,0,0,0,0,0,0,0,0]
   ],
   activeColumn: 0,
-  currentlyRunning: false,
+  currentlyPlaying: false,
+  interval: null,
 };
 
 export default(state = initialState, action) => {
   switch (action.type) {
     case 'NEXT_COLUMN':
-      if(state.activeColumn < state.matrix[0].length - 1)
+      if (state.activeColumn < state.matrix[0].length - 1)
         return Object.assign({}, state, {
           activeColumn: state.activeColumn + 1
         });
@@ -36,9 +37,16 @@ export default(state = initialState, action) => {
         matrix: newMatrix,
       });
 
-    case 'TOGGLE_RUNNING':
+    case 'PLAY':
       return Object.assign({}, state, {
-        currentlyRunning: !state.currentlyRunning
+        currentlyPlaying: true,
+        interval: action.interval
+      });
+
+    case 'PAUSE':
+      return Object.assign({}, state, {
+        currentlyPlaying: false,
+        interval: null
       });
 
     default:
