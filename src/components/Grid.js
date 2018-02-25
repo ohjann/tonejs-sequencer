@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Row from './Row.js';
-import styles from '../App.css';
+import styles from '../styles/App.css';
 
 const Grid = ({matrix, activeColumn, onSquareClick}) => (
   <div className={ styles.grid }>

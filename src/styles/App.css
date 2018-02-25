@@ -1,6 +1,9 @@
 html {
   background: #2C3E50;
 }
+.App {
+  margin-top: 40px;
+}
 .row {
   height: 40px;
 }

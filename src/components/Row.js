@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Square from './Square'
-import styles from '../App.css';
+import styles from '../styles/App.css';
 
 const Row = ({ row, rowIndex, activeColumn, onSquareClick }) => (
   <div className={ styles.row }>

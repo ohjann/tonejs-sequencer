@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from '../PlayPause.css';
+import styles from '../styles/PlayPause.css';
 
 const PlayPause = ({ currentlyRunning, playPause }) => (
   <div className={ styles.playpause }

@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch) {
         clearInterval(running);
         running = setInterval(() => {
           dispatch(nextColumn());
-        }, 700);
+        }, 500);
       } else {
         clearInterval(running);
         running = null;
