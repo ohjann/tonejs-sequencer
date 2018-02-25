@@ -14,7 +14,8 @@ var initialState = {
     [0,0,0,0,0,0,0,0,0,0,0,0]
   ],
   activeColumn: 0,
-  currentlyRunning: false,
+  currentlyPlaying: false,
+  interval: null,
 };
 
 export default(state = initialState, action) => {
@@ -36,9 +37,16 @@ export default(state = initialState, action) => {
         matrix: newMatrix,
       });
 
-    case 'TOGGLE_RUNNING':
+    case 'PLAY':
       return Object.assign({}, state, {
-        currentlyRunning: !state.currentlyRunning
+        currentlyPlaying: true,
+        interval: action.interval
+      });
+
+    case 'PAUSE':
+      return Object.assign({}, state, {
+        currentlyPlaying: false,
+        interval: null
       });
 
     default:
