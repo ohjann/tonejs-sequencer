@@ -20,7 +20,7 @@ var initialState = {
 export default(state = initialState, action) => {
   switch (action.type) {
     case 'NEXT_COLUMN':
-      if(state.activeColumn < state.matrix[0].length - 1)
+      if (state.activeColumn < state.matrix[0].length - 1)
         return Object.assign({}, state, {
           activeColumn: state.activeColumn + 1
         });

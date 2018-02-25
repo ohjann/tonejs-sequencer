@@ -1,8 +1,10 @@
 import matrix from './matrix';
+import synth from './synth';
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
-  matrix
+  matrix,
+  synth
 });
 
 export default rootReducer;
