@@ -1,16 +1,15 @@
 import React from "react";
 import styles from "../styles/synth.css";
-import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 
-const SynthButton = ({ toggleTone }) => (
+const SynthButton = ({ triggerAttackRelease }) => (
     <div className={styles.synthButton}
-    onClick={toggleTone} >
-</div>
+        onClick={() => triggerAttackRelease("C4","8n")} >
+    </div>
 );
 
 SynthButton.propTypes = {
-    toggleTone: PropTypes.func.isRequired,
+    triggerAttackRelease: PropTypes.func.isRequired,
 }
 
 export default SynthButton;

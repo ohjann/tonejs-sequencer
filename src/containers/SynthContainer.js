@@ -11,8 +11,9 @@ function mapStateToProps(state, props) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    toggleTone: () => {
-      synth.triggerAttackRelease("C4", "8n");
+    triggerAttackRelease: (note, time) => {
+      console.log(note, time);
+      synth.triggerAttackRelease(note, time);
     }
   }
 }
