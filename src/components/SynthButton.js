@@ -1,19 +1,16 @@
 import React from "react";
 import styles from "../styles/synth.css";
 import classNames from 'classnames/bind';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-const SynthButton = ({ onButtonClick, playing }) => (
-    <div className={classNames(styles.synthButton,
-        { [styles.active]: playing === true },
-    )}
-    onClick={onButtonClick} >
+const SynthButton = ({ toggleTone }) => (
+    <div className={styles.synthButton}
+    onClick={toggleTone} >
 </div>
 );
 
 SynthButton.propTypes = {
-    onButtonClick: PropTypes.func.isRequired,
-    playing: PropTypes.bool.isRequired,
+    toggleTone: PropTypes.func.isRequired,
 }
 
 export default SynthButton;

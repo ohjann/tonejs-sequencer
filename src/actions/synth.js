@@ -4,3 +4,7 @@ export const togglePlaying = () => {
         type: 'TOGGLE_PLAYING'
     }
 }
+
+export const triggerAttack = () => {
+    console.log("trigger attack");
+}
