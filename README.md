@@ -1,1 +1,2 @@
-Basic sequencer using [Tone.js](https://github.com/Tonejs/Tone.js/). Run using `npm start`.
+Basic sequencer using [Tone.js](https://github.com/Tonejs/Tone.js/).
+Install with `npm install`. Run with `npm start`.
