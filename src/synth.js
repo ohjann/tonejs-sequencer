@@ -1,6 +1,20 @@
 import Tone from 'tone'
 
-const Synth = new Tone.PolySynth(16, Tone.Synth).toMaster();
+const Synth = new Tone.PolySynth(8);
+
+Synth.set({
+  'oscillator' : {
+    'type' : 'triangle8'
+  },
+  'envelope' : {
+    'attack' : 2,
+    'decay' : 4,
+    'sustain': 1.4,
+    'release': 4
+  }
+});
+
+Synth.toMaster();
 
 Synth.pentatonic = [
   'A5',
