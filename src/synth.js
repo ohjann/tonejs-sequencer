@@ -1,23 +1,23 @@
 import Tone from 'tone';
 import * as MidiConvert from 'midiconvert'
 
-const Synth = new Tone.PolySynth(8);
-const Synth2 = new Tone.PolySynth(8);
+const MainSynth = new Tone.PolySynth(8);
+const BackingSynth = new Tone.PolySynth(8);
 
 const feedbackDelay = new Tone.FeedbackDelay("4n", 0.6).toMaster();
-Synth.set({
+MainSynth.set({
   'oscillator' : {
     'type' : 'triangle8'
   },
   'envelope' : {
-    'attack' : 2,
+    'attack' : 0.2,
     'decay' : 4,
     'sustain': 1.4,
     'release': 4
   }
 });
 
-Synth2.set({
+BackingSynth.set({
   'oscillator' : {
     'type' : 'sine'
   },
@@ -29,11 +29,16 @@ Synth2.set({
   }
 });
 
-Synth.toMaster();
-Synth2.connect(feedbackDelay);
-Synth2.toMaster();
+MainSynth.toMaster();
+BackingSynth.connect(feedbackDelay);
+BackingSynth.toMaster();
 
-Synth.pentatonic = [
+MainSynth.pentatonic = [
+  'A6',
+  'G6',
+  'E6',
+  'D6',
+  'C6',
   'A5',
   'G5',
   'E5',
@@ -45,11 +50,6 @@ Synth.pentatonic = [
   'D4',
   'C4',
   'A3',
-  'G3',
-  'E3',
-  'D3',
-  'C3',
-  'A2',
 ];
 
 MidiConvert.load("/backing.mid", function(midi) {
@@ -61,7 +61,7 @@ MidiConvert.load("/backing.mid", function(midi) {
   var midiPart = new Tone.Part(function(time, note) {
 
     //use the events to play the synth
-    Synth2.triggerAttackRelease(note.name, note.duration, time, note.velocity / 1.2)
+    BackingSynth.triggerAttackRelease(note.name, note.duration, time, note.velocity / 1.2)
 
   }, midi.tracks[0].notes).start()
 
@@ -73,4 +73,7 @@ MidiConvert.load("/backing.mid", function(midi) {
   Tone.Transport.start()
 })
 
-export default Synth;
+export {
+  MainSynth,
+  BackingSynth,
+}
