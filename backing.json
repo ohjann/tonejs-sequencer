@@ -1,0 +1,202 @@
+{
+  "header": {
+    "PPQ": 96,
+    "timeSignature": [
+      4,
+      4
+    ],
+    "bpm": 120,
+    "name": ""
+  },
+  "startTime": 0,
+  "duration": 32,
+  "tracks": [
+    {
+      "startTime": 0,
+      "duration": 32,
+      "length": 25,
+      "notes": [
+        {
+          "name": "A4",
+          "midi": 69,
+          "time": 0,
+          "velocity": 0.1889763779527559,
+          "duration": 2
+        },
+        {
+          "name": "E5",
+          "midi": 76,
+          "time": 0,
+          "velocity": 0.3543307086614173,
+          "duration": 2
+        },
+        {
+          "name": "F4",
+          "midi": 65,
+          "time": 2,
+          "velocity": 0.2125984251968504,
+          "duration": 2
+        },
+        {
+          "name": "C5",
+          "midi": 72,
+          "time": 2,
+          "velocity": 0.4881889763779528,
+          "duration": 2
+        },
+        {
+          "name": "G4",
+          "midi": 67,
+          "time": 4,
+          "velocity": 0.30708661417322836,
+          "duration": 4
+        },
+        {
+          "name": "D5",
+          "midi": 74,
+          "time": 4,
+          "velocity": 0.4881889763779528,
+          "duration": 4
+        },
+        {
+          "name": "A4",
+          "midi": 69,
+          "time": 8,
+          "velocity": 0.5354330708661418,
+          "duration": 2
+        },
+        {
+          "name": "E5",
+          "midi": 76,
+          "time": 8,
+          "velocity": 0.36220472440944884,
+          "duration": 2
+        },
+        {
+          "name": "F4",
+          "midi": 65,
+          "time": 10,
+          "velocity": 0.3543307086614173,
+          "duration": 2
+        },
+        {
+          "name": "C5",
+          "midi": 72,
+          "time": 10,
+          "velocity": 0.3858267716535433,
+          "duration": 2
+        },
+        {
+          "name": "G4",
+          "midi": 67,
+          "time": 12,
+          "velocity": 0.33070866141732286,
+          "duration": 2
+        },
+        {
+          "name": "B4",
+          "midi": 71,
+          "time": 12,
+          "velocity": 0.3464566929133858,
+          "duration": 2
+        },
+        {
+          "name": "E4",
+          "midi": 64,
+          "time": 14,
+          "velocity": 0.31496062992125984,
+          "duration": 2
+        },
+        {
+          "name": "F4",
+          "midi": 65,
+          "time": 16,
+          "velocity": 0.25196850393700787,
+          "duration": 2
+        },
+        {
+          "name": "C5",
+          "midi": 72,
+          "time": 16,
+          "velocity": 0.3858267716535433,
+          "duration": 2
+        },
+        {
+          "name": "G4",
+          "midi": 67,
+          "time": 18,
+          "velocity": 0.29133858267716534,
+          "duration": 2
+        },
+        {
+          "name": "E5",
+          "midi": 76,
+          "time": 18,
+          "velocity": 0.3700787401574803,
+          "duration": 2
+        },
+        {
+          "name": "A4",
+          "midi": 69,
+          "time": 20,
+          "velocity": 0.3464566929133858,
+          "duration": 2
+        },
+        {
+          "name": "C5",
+          "midi": 72,
+          "time": 20,
+          "velocity": 0.5354330708661418,
+          "duration": 2
+        },
+        {
+          "name": "D5",
+          "midi": 74,
+          "time": 22,
+          "velocity": 0.4881889763779528,
+          "duration": 2
+        },
+        {
+          "name": "F4",
+          "midi": 65,
+          "time": 24,
+          "velocity": 0.36220472440944884,
+          "duration": 2
+        },
+        {
+          "name": "E5",
+          "midi": 76,
+          "time": 24,
+          "velocity": 0.4881889763779528,
+          "duration": 2
+        },
+        {
+          "name": "G4",
+          "midi": 67,
+          "time": 26,
+          "velocity": 0.2047244094488189,
+          "duration": 2
+        },
+        {
+          "name": "C5",
+          "midi": 72,
+          "time": 26,
+          "velocity": 0.28346456692913385,
+          "duration": 2
+        },
+        {
+          "name": "A4",
+          "midi": 69,
+          "time": 28,
+          "velocity": 0.2677165354330709,
+          "duration": 4
+        }
+      ],
+      "controlChanges": {},
+      "id": 0,
+      "name": "3 2-Operator",
+      "channelNumber": 0,
+      "isPercussion": false
+    }
+  ]
+}
