@@ -14,7 +14,7 @@ export interface ICoordinates {
 }
 
 const initialState: IMatrixState = {
-  matrix: [12, 12].map(e => Array(e).fill(0)),
+  matrix: Array.from(Array(12), () => Array(12).fill(0)),
   activeColumn: 0,
   currentlyPlaying: false,
   interval: null,
@@ -28,6 +28,8 @@ export const matrixSlice = createSlice({
     nextColumn: (state) => {
       if (state.activeColumn < state.matrix[0].length - 1) {
         state.activeColumn += 1;
+      } else {
+        state.activeColumn = 0;
       }
     },
     toggleCell: (state, action: PayloadAction<ICoordinates>) => {

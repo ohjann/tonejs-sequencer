@@ -7,11 +7,11 @@ const PlayPause = () => {
   const currentlyPlaying: boolean = useAppSelector(selectCurrentlyPlaying);
   const dispatch = useAppDispatch();
   const handlePlayback = () => {
-      if (currentlyPlaying) {
-        dispatch(play());
-      } else {
-        dispatch(pause());
-      }
+    if (!currentlyPlaying) {
+      dispatch(play());
+    } else {
+      dispatch(pause());
+    }
   }
   return (
     <div className='playpause'>
