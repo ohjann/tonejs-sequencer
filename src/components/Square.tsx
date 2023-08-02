@@ -1,6 +1,5 @@
 import React from "react";
 import "../styles/App.css";
-import PropTypes from 'prop-types'
 
 interface IProps {
   onClick: Function;
@@ -14,10 +13,5 @@ const Square = ({ onClick, active, toggled }: IProps) => (
     onClick={() => onClick()} >
   </div>
 );
-
-Square.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  toggled: PropTypes.bool.isRequired,
-}
 
 export default Square;
