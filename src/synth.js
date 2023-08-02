@@ -77,6 +77,5 @@ MidiConvert.load("/backing.mid", function(midi) {
 
 export {
   MainSynth,
-  BackingSynth,
-  synthnow,
+  BackingSynth
 }
