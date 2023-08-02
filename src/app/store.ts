@@ -1,12 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import matrixReducer from '../reducers/matrix';
 import progressColumn from '../middleware/progressColumn';
+import playSynth from '../middleware/playSynth';
 
 export const store = configureStore({
   reducer: {
     matrix: matrixReducer,
   },
-  middleware: [progressColumn]
+  middleware: [progressColumn, playSynth]
 });
 
 export type AppDispatch = typeof store.dispatch;
