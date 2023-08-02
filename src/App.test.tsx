@@ -4,12 +4,14 @@ import { Provider } from 'react-redux';
 import { store } from './app/store';
 import App from './App';
 
-test('renders learn react link', () => {
-  const { getByText } = render(
+test('fails the test', () => {
+  const { asFragment } = render(
     <Provider store={store}>
       <App />
     </Provider>
   );
 
-  expect(getByText(/learn/i)).toBeInTheDocument();
+  expect(asFragment()).not.toMatchInlineSnapshot(`
+    <h1>Hello, World!</h1>
+  `);
 });
