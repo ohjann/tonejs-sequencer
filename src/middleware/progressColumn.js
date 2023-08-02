@@ -1,10 +1,10 @@
-import { nextColumn } from '../actions/matrix'
+import { nextColumn } from '../reducers/matrix'
 
-const progressColumn = store => next => action => {
-  if (action.type === 'PLAY') {
-    action.interval = setInterval(() => store.dispatch(nextColumn()), 500);
+const progressColumn = (store) => (next) => (action) => {
+  if (action.type === 'matrix/play') {
+    action.payload = setInterval(() => store.dispatch(nextColumn()), 500);
   }
-  else if (action.type === 'PAUSE') {
+  else if (action.type === 'matrix/pause') {
     clearInterval(store.getState().matrix.interval);
   }
   next(action);
