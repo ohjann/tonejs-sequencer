@@ -1,7 +1,6 @@
 import React from 'react'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { selectCurrentlyPlaying, play, pause } from '../reducers/matrix';
-import '../styles/PlayPause.css';
 
 const PlayPause = () => {
   const currentlyPlaying: boolean = useAppSelector(selectCurrentlyPlaying);
