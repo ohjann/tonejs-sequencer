@@ -6,6 +6,7 @@ const playSynth = store => next => action => {
     let column = state.activeColumn === state.matrix[0].length - 1 ? 0 : state.activeColumn + 1;
     for (let row = 0; row < state.matrix.length; row++) {
       if (state.matrix[row][column] === 1) {
+        MainSynth.volume.value = -15;
         MainSynth.triggerAttackRelease(MainSynth.pentatonic[row], "4n");
       }
     }

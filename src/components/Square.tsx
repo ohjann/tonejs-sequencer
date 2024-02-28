@@ -9,9 +9,9 @@ interface IProps {
 
 const Square = ({ onClick, active, toggled }: IProps) => (
   <div
-    className={`square ${active ? 'active' : toggled ? 'toggled' : ''}`}
-    onClick={() => onClick()} >
-  </div>
+    className={`square ${active ? "active" : ""} ${toggled ? "toggled" : ""}`}
+    onClick={() => onClick()}
+  />
 );
 
 export default Square;

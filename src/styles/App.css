@@ -1,38 +1,62 @@
-html {
-  background: #2C3E50;
+body {
+  background: 
+    repeating-linear-gradient(
+    45deg, 
+    var(--bit-color0) 0, 
+    var(--bit-color0) 32px, 
+    var(--bit-color1) 32px, 
+    var(--bit-color1) 64px
+    ) !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  filter: blur(.5px);
+  animation-duration: 0.01s;
+  animation-name: textflicker;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 .App {
-  margin-top: 40px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 100vh;
 }
 .row {
   height: 40px;
 }
 .grid {
-  width: 504px;
+  width: 480px;
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
+@media screen and (max-width: 500px) {
+  .grid, .playpause {
+    transform: scale(0.8);
+  }
+}
+@media screen and (max-width: 400px) {
+  .grid, .playpause {
+    transform: scale(0.7);
+  }
+}
 .square {
   width: 40px;
   height: 100%;
-  border: 1px solid #2C3E50;
-  border-radius: 5px;
+  border: 1px solid var(--bit-color1);
   display: inline-block;
-  background-color: #6DBCDB;
-  transition: background-color 0.05s ease;
+  background-color: var(--bit-color0);
+  box-sizing: border-box;
 }
-.square.active {
-  background-color: #ffcc66;
+.square:hover, .square.active {
+  border-color: var(--bit-color0);
 }
 .square.toggled {
-  background-color: #FC4349;
-}
-
-.playpause {
-  width: 80px;
-  height: 80px;
-  background: blue;
+  background-color: var(--bit-color1);
 }
 
 :focus {
@@ -40,22 +64,23 @@ html {
   outline-style: none;
 }
 .playpause {
-  background-color: #ffcc66;
+  border: 1px solid var(--bit-color0);
+  background-color: var(--bit-color1);
   padding: 5px;
-  border-radius: 5px;
-  width: 504px;
+  width: 480px;
   margin: 10px auto 0 auto;
+  box-sizing: border-box;
 }
 .playpause label {
   display: block;
   box-sizing: border-box;
   width: 0;
-  height: 74px;
-  border-color: transparent transparent transparent #2C3E50;
+  height: 50px;
+  border-color: transparent transparent transparent var(--bit-color0);
   transition: 100ms all ease;
   cursor: pointer;
   border-style: double;
-  border-width: 0px 0 0px 60px;
+  border-width: 0px 0 0px 40px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -66,8 +91,47 @@ html {
 }
 .playpause input[type="checkbox"]:checked + label {
   border-style: solid;
-  border-width: 37px 0 37px 60px;
+  border-width: 25px 0 25px 37px;
 }
 .playpause input[type="checkbox"]:focus + label {
   box-shadow: 0 0 5px lightblue;
 }
+
+.crt:after {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,1), #ffffff, #ffffff);
+  background-size: cover;
+  background-size: 100% 4px;
+  opacity: 0.1;
+  background-position: 0 0;
+  pointer-events: none;
+}
+
+@media screen{
+  .crt:after {
+    animation: scanlines infinite 155s linear ;
+  }
+} 
+@keyframes scanlines {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -100vh;
+  }
+}
+
+@keyframes textflicker {
+  from {
+    text-shadow: 1px 0 0 #ea36af, -2px 0 0 #75fa69;
+  }
+  to {
+    text-shadow: 2px 0.5px 2px #ea36af, -1px -0.5px 2px #75fa69;
+  }
+}
+
