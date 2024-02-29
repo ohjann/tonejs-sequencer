@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/tonejs-sequencer/static/css/main.c8b69156.css",
-    "main.js": "/tonejs-sequencer/static/js/main.8d2f0be4.js",
+    "main.css": "/tonejs-sequencer/static/css/main.5976fcdc.css",
+    "main.js": "/tonejs-sequencer/static/js/main.9db404b5.js",
     "static/js/787.06483eaf.chunk.js": "/tonejs-sequencer/static/js/787.06483eaf.chunk.js",
     "index.html": "/tonejs-sequencer/index.html",
-    "main.c8b69156.css.map": "/tonejs-sequencer/static/css/main.c8b69156.css.map",
-    "main.8d2f0be4.js.map": "/tonejs-sequencer/static/js/main.8d2f0be4.js.map",
+    "main.5976fcdc.css.map": "/tonejs-sequencer/static/css/main.5976fcdc.css.map",
+    "main.9db404b5.js.map": "/tonejs-sequencer/static/js/main.9db404b5.js.map",
     "787.06483eaf.chunk.js.map": "/tonejs-sequencer/static/js/787.06483eaf.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c8b69156.css",
-    "static/js/main.8d2f0be4.js"
+    "static/css/main.5976fcdc.css",
+    "static/js/main.9db404b5.js"
   ]
 }
