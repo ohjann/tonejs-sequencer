@@ -9,7 +9,7 @@ body {
     ) !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
-  filter: blur(.5px);
+  filter: blur(.4px);
   animation-duration: 0.01s;
   animation-name: textflicker;
   animation-iteration-count: infinite;
@@ -34,20 +34,20 @@ body {
   margin-right: auto;
   display: block;
 }
-@media screen and (max-width: 500px) {
-  .grid, .playpause {
-    transform: scale(0.8);
+@media screen and (max-width: 530px) {
+  .bit-card {
+    transform: scale(0.7);
   }
 }
 @media screen and (max-width: 400px) {
-  .grid, .playpause {
-    transform: scale(0.7);
+  .bit-card {
+    transform: scale(0.6);
   }
 }
 .square {
   width: 40px;
   height: 100%;
-  border: 1px solid var(--bit-color1);
+  border: var(--bit-border-width) solid var(--bit-color1);
   display: inline-block;
   background-color: var(--bit-color0);
   box-sizing: border-box;
@@ -64,7 +64,6 @@ body {
   outline-style: none;
 }
 .playpause {
-  border: 1px solid var(--bit-color0);
   background-color: var(--bit-color1);
   padding: 5px;
   width: 480px;

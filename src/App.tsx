@@ -7,7 +7,7 @@ import PlayPause from "./components/PlayPause";
 function App() {
   return (
     <div className="App crt">
-      <div>
+      <div className="bit-card">
         <Grid />
         <PlayPause />
       </div>

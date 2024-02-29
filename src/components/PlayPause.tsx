@@ -13,7 +13,7 @@ const PlayPause = () => {
     }
   }
   return (
-    <div className='playpause'>
+    <div className='playpause bit-button'>
       <input type="checkbox" value="None" id="playpause" name="check" defaultChecked={true}/>
       <label htmlFor="playpause" tabIndex={1}
         onClick={handlePlayback}
