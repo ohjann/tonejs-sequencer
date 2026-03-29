@@ -111,6 +111,104 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
 }
+/* Pattern Selector */
+.pattern-selector {
+  width: 480px;
+  margin: 0 auto 8px auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pattern-label {
+  font-size: 0.8em;
+  flex: 0 0 auto;
+}
+.pattern-buttons {
+  display: flex;
+  gap: 4px;
+}
+.pattern-btn {
+  padding: 3px 7px;
+  font-size: 0.85em;
+  cursor: pointer;
+  min-width: 28px;
+}
+.pattern-btn.active {
+  background-color: var(--bit-color1);
+  color: var(--bit-color0);
+}
+.pattern-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.pattern-actions .bit-button {
+  padding: 3px 8px;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+.pattern-actions .bit-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Pattern Chain */
+.pattern-chain {
+  width: 480px;
+  margin: 8px auto 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chain-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.chain-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: var(--bit-border-width) solid var(--bit-color1);
+  padding: 2px 5px;
+  cursor: grab;
+  font-size: 0.85em;
+  user-select: none;
+}
+.chain-slot:active {
+  cursor: grabbing;
+}
+.chain-slot-label {
+  min-width: 12px;
+  text-align: center;
+}
+.chain-remove {
+  background: none;
+  border: none;
+  color: var(--bit-color1);
+  cursor: pointer;
+  font-size: 1em;
+  padding: 0 2px;
+  line-height: 1;
+}
+.chain-remove:hover {
+  color: var(--bit-color0);
+  background-color: var(--bit-color1);
+}
+.chain-add-group {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.chain-add-btn {
+  padding: 2px 5px;
+  font-size: 0.75em;
+  cursor: pointer;
+}
+
 .playpause {
   background-color: var(--bit-color1);
   padding: 5px;

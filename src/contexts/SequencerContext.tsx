@@ -6,8 +6,20 @@ export interface ICoordinates {
   col: number;
 }
 
+const ROWS = 12;
+const COLS = 12;
+const NUM_PATTERNS = 8;
+const MAX_HISTORY = 50;
+
+function emptyGrid(): number[][] {
+  return Array.from(Array(ROWS), () => Array(COLS).fill(0));
+}
+
 interface SequencerState {
-  matrix: number[][];
+  patterns: number[][][];
+  activePattern: number;
+  patternChain: number[];
+  clipboard: number[][] | null;
   past: number[][][];
   future: number[][][];
   scaleName: ScaleName;
@@ -19,15 +31,18 @@ type SequencerAction =
   | { type: 'CLEAR_GRID' }
   | { type: 'UNDO' }
   | { type: 'REDO' }
+  | { type: 'SWITCH_PATTERN'; payload: number }
+  | { type: 'COPY_PATTERN' }
+  | { type: 'PASTE_PATTERN' }
+  | { type: 'SET_PATTERN_CHAIN'; payload: number[] }
   | { type: 'SET_SCALE'; payload: ScaleName }
   | { type: 'SET_ROOT_NOTE'; payload: RootNote };
 
-const ROWS = 12;
-const COLS = 12;
-const MAX_HISTORY = 50;
-
 const initialState: SequencerState = {
-  matrix: Array.from(Array(ROWS), () => Array(COLS).fill(0)),
+  patterns: Array.from({ length: NUM_PATTERNS }, emptyGrid),
+  activePattern: 0,
+  patternChain: [0],
+  clipboard: null,
   past: [],
   future: [],
   scaleName: 'pentatonic',
@@ -35,33 +50,66 @@ const initialState: SequencerState = {
 };
 
 function sequencerReducer(state: SequencerState, action: SequencerAction): SequencerState {
+  const currentMatrix = state.patterns[state.activePattern];
+
   switch (action.type) {
     case 'TOGGLE_CELL': {
       const { row, col } = action.payload;
-      const newMatrix = state.matrix.map((r, ri) =>
+      const newMatrix = currentMatrix.map((r, ri) =>
         ri === row ? r.map((c, ci) => (ci === col ? 1 - c : c)) : r
       );
-      const newPast = [...state.past, state.matrix].slice(-MAX_HISTORY);
-      return { ...state, matrix: newMatrix, past: newPast, future: [] };
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? newMatrix : p
+      );
+      const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
+      return { ...state, patterns: newPatterns, past: newPast, future: [] };
     }
     case 'CLEAR_GRID': {
-      const newMatrix = Array.from(Array(ROWS), () => Array(COLS).fill(0));
-      const newPast = [...state.past, state.matrix].slice(-MAX_HISTORY);
-      return { ...state, matrix: newMatrix, past: newPast, future: [] };
+      const newMatrix = emptyGrid();
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? newMatrix : p
+      );
+      const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
+      return { ...state, patterns: newPatterns, past: newPast, future: [] };
     }
     case 'UNDO': {
       if (state.past.length === 0) return state;
       const previous = state.past[state.past.length - 1];
       const newPast = state.past.slice(0, -1);
-      const newFuture = [state.matrix, ...state.future];
-      return { ...state, matrix: previous, past: newPast, future: newFuture };
+      const newFuture = [currentMatrix, ...state.future];
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? previous : p
+      );
+      return { ...state, patterns: newPatterns, past: newPast, future: newFuture };
     }
     case 'REDO': {
       if (state.future.length === 0) return state;
       const next = state.future[0];
       const newFuture = state.future.slice(1);
-      const newPast = [...state.past, state.matrix].slice(-MAX_HISTORY);
-      return { ...state, matrix: next, past: newPast, future: newFuture };
+      const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? next : p
+      );
+      return { ...state, patterns: newPatterns, past: newPast, future: newFuture };
+    }
+    case 'SWITCH_PATTERN': {
+      const idx = action.payload;
+      if (idx < 0 || idx >= NUM_PATTERNS || idx === state.activePattern) return state;
+      return { ...state, activePattern: idx, past: [], future: [] };
+    }
+    case 'COPY_PATTERN': {
+      return { ...state, clipboard: currentMatrix.map(row => [...row]) };
+    }
+    case 'PASTE_PATTERN': {
+      if (!state.clipboard) return state;
+      const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? state.clipboard!.map(row => [...row]) : p
+      );
+      return { ...state, patterns: newPatterns, past: newPast, future: [] };
+    }
+    case 'SET_PATTERN_CHAIN': {
+      return { ...state, patternChain: action.payload };
     }
     case 'SET_SCALE':
       return { ...state, scaleName: action.payload };
@@ -85,6 +133,15 @@ interface SequencerContextValue {
   scaleNotes: string[];
   setScale: (scale: ScaleName) => void;
   setRootNote: (root: RootNote) => void;
+  patterns: number[][][];
+  activePattern: number;
+  patternChain: number[];
+  clipboard: number[][] | null;
+  switchPattern: (idx: number) => void;
+  copyPattern: () => void;
+  pastePattern: () => void;
+  setPatternChain: (chain: number[]) => void;
+  numPatterns: number;
 }
 
 const SequencerContext = createContext<SequencerContextValue | null>(null);
@@ -98,10 +155,14 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
   const redo = useCallback(() => dispatch({ type: 'REDO' }), []);
   const setScale = useCallback((scale: ScaleName) => dispatch({ type: 'SET_SCALE', payload: scale }), []);
   const setRootNote = useCallback((root: RootNote) => dispatch({ type: 'SET_ROOT_NOTE', payload: root }), []);
+  const switchPattern = useCallback((idx: number) => dispatch({ type: 'SWITCH_PATTERN', payload: idx }), []);
+  const copyPattern = useCallback(() => dispatch({ type: 'COPY_PATTERN' }), []);
+  const pastePattern = useCallback(() => dispatch({ type: 'PASTE_PATTERN' }), []);
+  const setPatternChain = useCallback((chain: number[]) => dispatch({ type: 'SET_PATTERN_CHAIN', payload: chain }), []);
 
   const scaleNotes = useMemo(
-    () => generateScaleNotes(state.scaleName, state.rootNote, state.matrix.length),
-    [state.scaleName, state.rootNote, state.matrix.length]
+    () => generateScaleNotes(state.scaleName, state.rootNote, state.patterns[state.activePattern].length),
+    [state.scaleName, state.rootNote, state.patterns, state.activePattern]
   );
 
   useEffect(() => {
@@ -120,7 +181,7 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <SequencerContext.Provider value={{
-      matrix: state.matrix,
+      matrix: state.patterns[state.activePattern],
       toggleCell,
       clearGrid,
       undo,
@@ -132,6 +193,15 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
       scaleNotes,
       setScale,
       setRootNote,
+      patterns: state.patterns,
+      activePattern: state.activePattern,
+      patternChain: state.patternChain,
+      clipboard: state.clipboard,
+      switchPattern,
+      copyPattern,
+      pastePattern,
+      setPatternChain,
+      numPatterns: NUM_PATTERNS,
     }}>
       {children}
     </SequencerContext.Provider>
