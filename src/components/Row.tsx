@@ -1,7 +1,7 @@
 import React from 'react'
 import Square from './Square'
 import '../styles/App.css';
-import { ICoordinates } from '../reducers/matrix';
+import { ICoordinates } from '../contexts/SequencerContext';
 
 interface IProps {
   row: Array<number>,
