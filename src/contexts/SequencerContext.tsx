@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 
 export interface ICoordinates {
   row: number;
@@ -7,17 +7,24 @@ export interface ICoordinates {
 
 interface SequencerState {
   matrix: number[][];
+  past: number[][][];
+  future: number[][][];
 }
 
 type SequencerAction =
   | { type: 'TOGGLE_CELL'; payload: ICoordinates }
-  | { type: 'CLEAR_GRID' };
+  | { type: 'CLEAR_GRID' }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
 
 const ROWS = 12;
 const COLS = 12;
+const MAX_HISTORY = 50;
 
 const initialState: SequencerState = {
   matrix: Array.from(Array(ROWS), () => Array(COLS).fill(0)),
+  past: [],
+  future: [],
 };
 
 function sequencerReducer(state: SequencerState, action: SequencerAction): SequencerState {
@@ -27,10 +34,28 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
       const newMatrix = state.matrix.map((r, ri) =>
         ri === row ? r.map((c, ci) => (ci === col ? 1 - c : c)) : r
       );
-      return { ...state, matrix: newMatrix };
+      const newPast = [...state.past, state.matrix].slice(-MAX_HISTORY);
+      return { matrix: newMatrix, past: newPast, future: [] };
     }
-    case 'CLEAR_GRID':
-      return { ...state, matrix: Array.from(Array(ROWS), () => Array(COLS).fill(0)) };
+    case 'CLEAR_GRID': {
+      const newMatrix = Array.from(Array(ROWS), () => Array(COLS).fill(0));
+      const newPast = [...state.past, state.matrix].slice(-MAX_HISTORY);
+      return { matrix: newMatrix, past: newPast, future: [] };
+    }
+    case 'UNDO': {
+      if (state.past.length === 0) return state;
+      const previous = state.past[state.past.length - 1];
+      const newPast = state.past.slice(0, -1);
+      const newFuture = [state.matrix, ...state.future];
+      return { matrix: previous, past: newPast, future: newFuture };
+    }
+    case 'REDO': {
+      if (state.future.length === 0) return state;
+      const next = state.future[0];
+      const newFuture = state.future.slice(1);
+      const newPast = [...state.past, state.matrix].slice(-MAX_HISTORY);
+      return { matrix: next, past: newPast, future: newFuture };
+    }
     default:
       return state;
   }
@@ -40,6 +65,10 @@ interface SequencerContextValue {
   matrix: number[][];
   toggleCell: (coords: ICoordinates) => void;
   clearGrid: () => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 const SequencerContext = createContext<SequencerContextValue | null>(null);
@@ -47,11 +76,35 @@ const SequencerContext = createContext<SequencerContextValue | null>(null);
 export function SequencerProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(sequencerReducer, initialState);
 
-  const toggleCell = (coords: ICoordinates) => dispatch({ type: 'TOGGLE_CELL', payload: coords });
-  const clearGrid = () => dispatch({ type: 'CLEAR_GRID' });
+  const toggleCell = useCallback((coords: ICoordinates) => dispatch({ type: 'TOGGLE_CELL', payload: coords }), []);
+  const clearGrid = useCallback(() => dispatch({ type: 'CLEAR_GRID' }), []);
+  const undo = useCallback(() => dispatch({ type: 'UNDO' }), []);
+  const redo = useCallback(() => dispatch({ type: 'REDO' }), []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && !e.shiftKey && e.key === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'UNDO' });
+      } else if (e.ctrlKey && e.shiftKey && e.key === 'Z') {
+        e.preventDefault();
+        dispatch({ type: 'REDO' });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
-    <SequencerContext.Provider value={{ matrix: state.matrix, toggleCell, clearGrid }}>
+    <SequencerContext.Provider value={{
+      matrix: state.matrix,
+      toggleCell,
+      clearGrid,
+      undo,
+      redo,
+      canUndo: state.past.length > 0,
+      canRedo: state.future.length > 0,
+    }}>
       {children}
     </SequencerContext.Provider>
   );

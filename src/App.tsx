@@ -3,6 +3,7 @@ import "./styles/1bit-ui.css";
 import "./styles/App.css";
 import Grid from "./components/Grid";
 import PlayPause from "./components/PlayPause";
+import UndoRedo from "./components/UndoRedo";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
 
@@ -13,7 +14,10 @@ function App() {
         <div className="App crt">
           <div className="bit-card">
             <Grid />
-            <PlayPause />
+            <div className="controls">
+              <PlayPause />
+              <UndoRedo />
+            </div>
           </div>
         </div>
       </TransportProvider>

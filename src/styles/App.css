@@ -63,6 +63,32 @@ body {
   outline-color: transparent;
   outline-style: none;
 }
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 480px;
+  margin: 10px auto 0 auto;
+}
+.controls .playpause {
+  margin: 0;
+  flex: 0 0 auto;
+}
+.undo-redo {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  justify-content: flex-end;
+}
+.undo-redo .bit-button {
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+.undo-redo .bit-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .playpause {
   background-color: var(--bit-color1);
   padding: 5px;
