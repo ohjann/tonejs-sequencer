@@ -21,7 +21,7 @@ function App() {
       <TransportProvider>
         <SynthProvider>
         <AudioEngineConnector />
-        <div className="App crt">
+        <div className="flex justify-center items-center content-center h-screen overflow-auto crt">
           <div className="bit-card">
             <Grid />
             <TransportBar />

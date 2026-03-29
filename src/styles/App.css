@@ -15,16 +15,6 @@ body {
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
-.App {
-  margin: 0;
-  padding: 0;
-  overflow: auto;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  height: 100vh;
-}
 .row {
   height: 40px;
 }
