@@ -11,6 +11,8 @@ import PatternSelector from "./components/PatternSelector";
 import PatternChain from "./components/PatternChain";
 import ExportMidi from "./components/ExportMidi";
 import ThemeSwitcher from "./components/ThemeSwitcher";
+import MasterVolume from "./components/MasterVolume";
+import { PatternPresetSelect } from "./components/PresetBrowser";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
 import { SynthProvider } from "./contexts/SynthContext";
@@ -37,10 +39,12 @@ function App() {
               </div>
               <ScaleSelector />
               <PatternSelector />
+              <PatternPresetSelect />
               <Grid />
               <TransportBar />
               <div className="controls">
                 <UndoRedo />
+                <MasterVolume />
                 <ExportWav />
                 <ExportMidi />
               </div>

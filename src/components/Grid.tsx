@@ -3,6 +3,7 @@ import Cell from './Cell';
 import { useSequencer } from '../contexts/SequencerContext';
 import { useTransport } from '../contexts/TransportContext';
 import StepCountSelector from './StepCountSelector';
+import { SynthPresetSelect } from './PresetBrowser';
 import '../styles/App.css';
 
 const Grid = () => {
@@ -27,6 +28,7 @@ const Grid = () => {
                 onCycleVelocity={cycleVelocity}
               />
             ))}
+            <SynthPresetSelect trackIndex={rowIndex} />
           </div>
         ))}
       </div>

@@ -43,7 +43,8 @@ type SequencerAction =
   | { type: 'COPY_PATTERN' }
   | { type: 'PASTE_PATTERN' }
   | { type: 'SET_PATTERN_CHAIN'; payload: number[] }
-  | { type: 'SET_STEP_COUNT'; payload: StepCount };
+  | { type: 'SET_STEP_COUNT'; payload: StepCount }
+  | { type: 'SET_GRID'; payload: number[][] };
 
 const initialState: SequencerState = {
   patterns: Array.from({ length: NUM_PATTERNS }, () => emptyGrid(DEFAULT_COLS)),
@@ -146,6 +147,13 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
       );
       return { ...state, patterns: newPatterns, stepCount: newStepCount, past: [], future: [] };
     }
+    case 'SET_GRID': {
+      const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? action.payload : p
+      );
+      return { ...state, patterns: newPatterns, past: newPast, future: [] };
+    }
     case 'SET_SCALE':
       return { ...state, scaleName: action.payload };
     case 'SET_ROOT_NOTE':
@@ -177,6 +185,7 @@ interface SequencerContextValue {
   copyPattern: () => void;
   pastePattern: () => void;
   setPatternChain: (chain: number[]) => void;
+  setGrid: (grid: number[][]) => void;
   numPatterns: number;
   stepCount: StepCount;
   setStepCount: (count: StepCount) => void;
@@ -199,6 +208,7 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
   const pastePattern = useCallback(() => dispatch({ type: 'PASTE_PATTERN' }), []);
   const setPatternChain = useCallback((chain: number[]) => dispatch({ type: 'SET_PATTERN_CHAIN', payload: chain }), []);
   const setStepCount = useCallback((count: StepCount) => dispatch({ type: 'SET_STEP_COUNT', payload: count }), []);
+  const setGrid = useCallback((grid: number[][]) => dispatch({ type: 'SET_GRID', payload: grid }), []);
 
   const scaleNotes = useMemo(
     () => generateScaleNotes(state.scaleName, state.rootNote, state.patterns[state.activePattern].length),
@@ -242,6 +252,7 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
       copyPattern,
       pastePattern,
       setPatternChain,
+      setGrid,
       numPatterns: NUM_PATTERNS,
       stepCount: state.stepCount,
       setStepCount,

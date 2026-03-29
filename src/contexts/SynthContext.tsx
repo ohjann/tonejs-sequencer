@@ -34,15 +34,18 @@ const ROWS = 12;
 
 interface SynthState {
   tracks: TrackSynthParams[];
+  masterVolume: number;
 }
 
 type SynthAction =
   | { type: 'SET_TRACK_PARAMS'; payload: { row: number; params: Partial<TrackSynthParams> } }
   | { type: 'TOGGLE_MUTE'; payload: number }
-  | { type: 'TOGGLE_SOLO'; payload: number };
+  | { type: 'TOGGLE_SOLO'; payload: number }
+  | { type: 'SET_MASTER_VOLUME'; payload: number };
 
 const initialState: SynthState = {
   tracks: Array.from({ length: ROWS }, () => ({ ...DEFAULT_TRACK_PARAMS })),
+  masterVolume: 0,
 };
 
 function synthReducer(state: SynthState, action: SynthAction): SynthState {
@@ -68,6 +71,8 @@ function synthReducer(state: SynthState, action: SynthAction): SynthState {
       );
       return { ...state, tracks };
     }
+    case 'SET_MASTER_VOLUME':
+      return { ...state, masterVolume: action.payload };
     default:
       return state;
   }
@@ -75,9 +80,11 @@ function synthReducer(state: SynthState, action: SynthAction): SynthState {
 
 interface SynthContextValue {
   tracks: TrackSynthParams[];
+  masterVolume: number;
   setTrackParams: (row: number, params: Partial<TrackSynthParams>) => void;
   toggleMute: (row: number) => void;
   toggleSolo: (row: number) => void;
+  setMasterVolume: (vol: number) => void;
 }
 
 const SynthContext = createContext<SynthContextValue | null>(null);
@@ -89,9 +96,10 @@ export function SynthProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'SET_TRACK_PARAMS', payload: { row, params } });
   const toggleMute = (row: number) => dispatch({ type: 'TOGGLE_MUTE', payload: row });
   const toggleSolo = (row: number) => dispatch({ type: 'TOGGLE_SOLO', payload: row });
+  const setMasterVolume = (vol: number) => dispatch({ type: 'SET_MASTER_VOLUME', payload: vol });
 
   return (
-    <SynthContext.Provider value={{ tracks: state.tracks, setTrackParams, toggleMute, toggleSolo }}>
+    <SynthContext.Provider value={{ tracks: state.tracks, masterVolume: state.masterVolume, setTrackParams, toggleMute, toggleSolo, setMasterVolume }}>
       {children}
     </SynthContext.Provider>
   );
