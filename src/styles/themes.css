@@ -1,0 +1,65 @@
+/* Theme: Classic (default 1-bit retro) */
+[data-theme="classic"] {
+  --bit-color0: #3e232c;
+  --bit-color1: #edf6d6;
+}
+
+/* Theme: CRT Green */
+[data-theme="crt-green"] {
+  --bit-color0: #0a1a0a;
+  --bit-color1: #33ff33;
+}
+
+/* Theme: Inverse */
+[data-theme="inverse"] {
+  --bit-color0: #edf6d6;
+  --bit-color1: #3e232c;
+}
+
+/* Theme: Midnight */
+[data-theme="midnight"] {
+  --bit-color0: #c0c8e0;
+  --bit-color1: #0d1117;
+}
+
+/* Theme: Hacker */
+[data-theme="hacker"] {
+  --bit-color0: #00ff41;
+  --bit-color1: #0d0208;
+}
+
+/* CRT effects — only applied when data-crt="true" */
+[data-crt="true"] .crt:after {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,1), #ffffff, #ffffff);
+  background-size: 100% 4px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+[data-crt="true"] .crt:after {
+  animation: scanlines infinite 155s linear;
+}
+
+[data-crt="false"] .crt:after {
+  display: none;
+}
+
+/* Text flicker — only when CRT is on */
+[data-crt="true"] body {
+  filter: blur(.4px);
+  animation-duration: 0.01s;
+  animation-name: textflicker;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+[data-crt="false"] body {
+  filter: none;
+  animation: none;
+}

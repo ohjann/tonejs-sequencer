@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles/1bit-ui.css";
+import "./styles/themes.css";
 import "./styles/App.css";
 import Grid from "./components/Grid";
 import TransportBar from "./components/TransportBar";
@@ -9,9 +10,11 @@ import ScaleSelector from "./components/ScaleSelector";
 import PatternSelector from "./components/PatternSelector";
 import PatternChain from "./components/PatternChain";
 import ExportMidi from "./components/ExportMidi";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
 import { SynthProvider } from "./contexts/SynthContext";
+import { UIProvider } from "./contexts/UIContext";
 import { useAudioEngine } from "./audio/useAudioEngine";
 
 function AudioEngineConnector() {
@@ -21,27 +24,33 @@ function AudioEngineConnector() {
 
 function App() {
   return (
-    <SequencerProvider>
-      <TransportProvider>
-        <SynthProvider>
-        <AudioEngineConnector />
-        <div className="flex justify-center items-center content-center h-screen overflow-auto crt">
-          <div className="bit-card">
-            <ScaleSelector />
-            <PatternSelector />
-            <Grid />
-            <TransportBar />
-            <div className="controls">
-              <UndoRedo />
-              <ExportWav />
-              <ExportMidi />
+    <UIProvider>
+      <SequencerProvider>
+        <TransportProvider>
+          <SynthProvider>
+          <AudioEngineConnector />
+          <div className="flex justify-center items-center content-center h-screen overflow-auto crt">
+            <div className="bit-card">
+              <div className="controls" style={{ marginTop: 0, marginBottom: "8px" }}>
+                <span style={{ fontWeight: "bold", fontSize: "0.8em" }}>Theme</span>
+                <ThemeSwitcher />
+              </div>
+              <ScaleSelector />
+              <PatternSelector />
+              <Grid />
+              <TransportBar />
+              <div className="controls">
+                <UndoRedo />
+                <ExportWav />
+                <ExportMidi />
+              </div>
+              <PatternChain />
             </div>
-            <PatternChain />
           </div>
-        </div>
-        </SynthProvider>
-      </TransportProvider>
-    </SequencerProvider>
+          </SynthProvider>
+        </TransportProvider>
+      </SequencerProvider>
+    </UIProvider>
   );
 }
 

@@ -1,19 +1,14 @@
 body {
-  background: 
+  background:
     repeating-linear-gradient(
-    45deg, 
-    var(--bit-color0) 0, 
-    var(--bit-color0) 32px, 
-    var(--bit-color1) 32px, 
+    45deg,
+    var(--bit-color0) 0,
+    var(--bit-color0) 32px,
+    var(--bit-color1) 32px,
     var(--bit-color1) 64px
     ) !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
-  filter: blur(.4px);
-  animation-duration: 0.01s;
-  animation-name: textflicker;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
 }
 .row {
   height: 40px;
