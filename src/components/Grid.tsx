@@ -1,24 +1,31 @@
-import React from 'react'
-import Row from './Row';
-import { useSequencer, ICoordinates } from '../contexts/SequencerContext';
+import React from 'react';
+import Cell from './Cell';
+import { useSequencer } from '../contexts/SequencerContext';
 import { useTransport } from '../contexts/TransportContext';
 import '../styles/App.css';
 
 const Grid = () => {
   const { matrix, toggleCell } = useSequencer();
   const { activeStep } = useTransport();
+
   return (
     <div className='grid'>
-      { matrix.map((row, rowIndex) => (
-        <Row key={rowIndex+"-"}
-          row={row}
-          rowIndex={rowIndex}
-          activeColumn={activeStep}
-          onSquareClick={(coords: ICoordinates) => toggleCell(coords)}
-        />
+      {matrix.map((row, rowIndex) => (
+        <div key={rowIndex} className='row'>
+          {row.map((cell, colIndex) => (
+            <Cell
+              key={`${rowIndex}-${colIndex}`}
+              row={rowIndex}
+              col={colIndex}
+              active={colIndex === activeStep}
+              toggled={Boolean(cell)}
+              onToggle={toggleCell}
+            />
+          ))}
+        </div>
       ))}
     </div>
   );
-}
+};
 
 export default Grid;
