@@ -1,5 +1,4 @@
 import * as Tone from 'tone';
-import { PENTATONIC_SCALE } from './scales';
 
 function audioBufferToWav(buffer: AudioBuffer): ArrayBuffer {
   const numChannels = buffer.numberOfChannels;
@@ -52,7 +51,7 @@ function audioBufferToWav(buffer: AudioBuffer): ArrayBuffer {
   return arrayBuffer;
 }
 
-export async function exportPatternAsWav(matrix: number[][], bpm: number): Promise<void> {
+export async function exportPatternAsWav(matrix: number[][], bpm: number, scaleNotes: string[]): Promise<void> {
   const cols = matrix[0]?.length ?? 0;
   if (cols === 0) return;
 
@@ -77,7 +76,7 @@ export async function exportPatternAsWav(matrix: number[][], bpm: number): Promi
       const time = step * stepDuration;
       for (let row = 0; row < matrix.length; row++) {
         if (matrix[row][step] === 1) {
-          const note = PENTATONIC_SCALE[row];
+          const note = scaleNotes[row];
           if (note) {
             transport.schedule((t) => {
               synth.triggerAttackRelease(note, '8n', t);

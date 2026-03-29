@@ -5,6 +5,7 @@ import Grid from "./components/Grid";
 import TransportBar from "./components/TransportBar";
 import UndoRedo from "./components/UndoRedo";
 import ExportWav from "./components/ExportWav";
+import ScaleSelector from "./components/ScaleSelector";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
 import { SynthProvider } from "./contexts/SynthContext";
@@ -23,6 +24,7 @@ function App() {
         <AudioEngineConnector />
         <div className="flex justify-center items-center content-center h-screen overflow-auto crt">
           <div className="bit-card">
+            <ScaleSelector />
             <Grid />
             <TransportBar />
             <div className="controls">

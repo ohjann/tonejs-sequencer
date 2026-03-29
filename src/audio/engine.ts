@@ -1,9 +1,9 @@
 import * as Tone from 'tone';
-import { PENTATONIC_SCALE } from './scales';
 import { TrackSynthParams, DEFAULT_TRACK_PARAMS } from '../contexts/SynthContext';
 import { SynthBundle, createSynthBundle, updateSynthBundle } from './synth-factory';
 
 type MatrixRef = { current: number[][] | null };
+type ScaleNotesRef = { current: string[] };
 type OnStepCallback = (step: number) => void;
 
 const ROW_COUNT = 12;
@@ -15,6 +15,7 @@ class AudioEngine {
   private scheduleId: number | null = null;
   private currentStep = 0;
   private matrixRef: MatrixRef = { current: null };
+  private scaleNotesRef: ScaleNotesRef = { current: [] };
   private onStep: OnStepCallback | null = null;
 
   constructor() {
@@ -23,8 +24,9 @@ class AudioEngine {
     this.bundles = this.trackParams.map((p) => createSynthBundle(p, this.delay));
   }
 
-  init(matrixRef: MatrixRef, onStep: OnStepCallback) {
+  init(matrixRef: MatrixRef, scaleNotesRef: ScaleNotesRef, onStep: OnStepCallback) {
     this.matrixRef = matrixRef;
+    this.scaleNotesRef = scaleNotesRef;
     this.onStep = onStep;
   }
 
@@ -55,7 +57,7 @@ class AudioEngine {
 
         for (let row = 0; row < matrix.length; row++) {
           if (matrix[row][step] === 1 && this.isTrackAudible(row)) {
-            const note = PENTATONIC_SCALE[row];
+            const note = this.scaleNotesRef.current[row];
             if (note) {
               this.bundles[row].synth.triggerAttackRelease(note, '8n', time);
             }

@@ -5,7 +5,7 @@ import { useSynth } from '../contexts/SynthContext';
 import { audioEngine } from './engine';
 
 export function useAudioEngine() {
-  const { matrix } = useSequencer();
+  const { matrix, scaleNotes } = useSequencer();
   const { isPlaying, bpm, swing, setActiveStep } = useTransport();
   const { tracks } = useSynth();
 
@@ -14,8 +14,13 @@ export function useAudioEngine() {
     matrixRef.current = matrix;
   }, [matrix]);
 
+  const scaleNotesRef = useRef(scaleNotes);
   useEffect(() => {
-    audioEngine.init(matrixRef, setActiveStep);
+    scaleNotesRef.current = scaleNotes;
+  }, [scaleNotes]);
+
+  useEffect(() => {
+    audioEngine.init(matrixRef, scaleNotesRef, setActiveStep);
   }, [setActiveStep]);
 
   useEffect(() => {

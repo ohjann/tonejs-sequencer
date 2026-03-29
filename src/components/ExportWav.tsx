@@ -4,14 +4,14 @@ import { useTransport } from '../contexts/TransportContext';
 import { exportPatternAsWav } from '../audio/exportWav';
 
 const ExportWav = () => {
-  const { matrix } = useSequencer();
+  const { matrix, scaleNotes } = useSequencer();
   const { bpm } = useTransport();
   const [exporting, setExporting] = useState(false);
 
   const handleExport = async () => {
     setExporting(true);
     try {
-      await exportPatternAsWav(matrix, bpm);
+      await exportPatternAsWav(matrix, bpm, scaleNotes);
     } finally {
       setExporting(false);
     }
