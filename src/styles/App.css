@@ -160,3 +160,61 @@ body {
   }
 }
 
+/* TransportBar */
+.transport-bar {
+  width: 480px;
+  margin: 10px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.transport-buttons {
+  display: flex;
+  gap: 8px;
+}
+.transport-btn {
+  flex: 1;
+  cursor: pointer;
+}
+
+/* BpmControl */
+.bpm-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bpm-label {
+  font-weight: bold;
+  min-width: 2.5em;
+}
+.bpm-slider {
+  flex: 1;
+  cursor: pointer;
+}
+.bpm-input {
+  width: 4em;
+  text-align: center;
+}
+.bpm-tap {
+  cursor: pointer;
+}
+
+/* SwingControl */
+.swing-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.swing-label {
+  font-weight: bold;
+  min-width: 2.5em;
+}
+.swing-slider {
+  flex: 1;
+  cursor: pointer;
+}
+.swing-value {
+  min-width: 3em;
+  text-align: right;
+}
+

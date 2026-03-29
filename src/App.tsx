@@ -2,7 +2,7 @@ import React from "react";
 import "./styles/1bit-ui.css";
 import "./styles/App.css";
 import Grid from "./components/Grid";
-import PlayPause from "./components/PlayPause";
+import TransportBar from "./components/TransportBar";
 import UndoRedo from "./components/UndoRedo";
 import ExportWav from "./components/ExportWav";
 import { SequencerProvider } from "./contexts/SequencerContext";
@@ -22,8 +22,8 @@ function App() {
         <div className="App crt">
           <div className="bit-card">
             <Grid />
+            <TransportBar />
             <div className="controls">
-              <PlayPause />
               <UndoRedo />
               <ExportWav />
             </div>

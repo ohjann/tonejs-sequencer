@@ -5,7 +5,7 @@ import { audioEngine } from './engine';
 
 export function useAudioEngine() {
   const { matrix } = useSequencer();
-  const { isPlaying, bpm, setActiveStep } = useTransport();
+  const { isPlaying, bpm, swing, setActiveStep } = useTransport();
 
   const matrixRef = useRef(matrix);
   useEffect(() => {
@@ -28,4 +28,8 @@ export function useAudioEngine() {
   useEffect(() => {
     audioEngine.setBpm(bpm);
   }, [bpm]);
+
+  useEffect(() => {
+    audioEngine.setSwing(swing);
+  }, [swing]);
 }

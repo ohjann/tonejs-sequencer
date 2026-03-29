@@ -68,6 +68,11 @@ class AudioEngine {
   setBpm(bpm: number) {
     Tone.getTransport().bpm.value = bpm;
   }
+
+  setSwing(swing: number) {
+    Tone.getTransport().swing = swing;
+    Tone.getTransport().swingSubdivision = '8n';
+  }
 }
 
 export const audioEngine = new AudioEngine();
