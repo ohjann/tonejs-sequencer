@@ -8,6 +8,7 @@ import ExportWav from "./components/ExportWav";
 import ScaleSelector from "./components/ScaleSelector";
 import PatternSelector from "./components/PatternSelector";
 import PatternChain from "./components/PatternChain";
+import ExportMidi from "./components/ExportMidi";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
 import { SynthProvider } from "./contexts/SynthContext";
@@ -33,6 +34,7 @@ function App() {
             <div className="controls">
               <UndoRedo />
               <ExportWav />
+              <ExportMidi />
             </div>
             <PatternChain />
           </div>

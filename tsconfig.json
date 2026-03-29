@@ -16,7 +16,10 @@
     "noUnusedParameters": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "midi-writer-js": ["./node_modules/midi-writer-js/build/types/main.d.ts"]
+    }
   },
   "include": ["src", "vite.config.ts"],
   "exclude": ["src/**/*.test.tsx", "src/**/*.test.ts", "src/setupTests.ts"]

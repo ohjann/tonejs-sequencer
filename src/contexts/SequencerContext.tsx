@@ -31,12 +31,12 @@ type SequencerAction =
   | { type: 'CLEAR_GRID' }
   | { type: 'UNDO' }
   | { type: 'REDO' }
+  | { type: 'SET_SCALE'; payload: ScaleName }
+  | { type: 'SET_ROOT_NOTE'; payload: RootNote }
   | { type: 'SWITCH_PATTERN'; payload: number }
   | { type: 'COPY_PATTERN' }
   | { type: 'PASTE_PATTERN' }
-  | { type: 'SET_PATTERN_CHAIN'; payload: number[] }
-  | { type: 'SET_SCALE'; payload: ScaleName }
-  | { type: 'SET_ROOT_NOTE'; payload: RootNote };
+  | { type: 'SET_PATTERN_CHAIN'; payload: number[] };
 
 const initialState: SequencerState = {
   patterns: Array.from({ length: NUM_PATTERNS }, emptyGrid),
