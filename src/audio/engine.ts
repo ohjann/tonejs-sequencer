@@ -1,11 +1,16 @@
 import * as Tone from 'tone';
 import { PENTATONIC_SCALE } from './scales';
+import { TrackSynthParams, DEFAULT_TRACK_PARAMS } from '../contexts/SynthContext';
+import { SynthBundle, createSynthBundle, updateSynthBundle } from './synth-factory';
 
 type MatrixRef = { current: number[][] | null };
 type OnStepCallback = (step: number) => void;
 
+const ROW_COUNT = 12;
+
 class AudioEngine {
-  private synth: Tone.PolySynth<Tone.Synth>;
+  private bundles: SynthBundle[];
+  private trackParams: TrackSynthParams[];
   private delay: Tone.FeedbackDelay;
   private scheduleId: number | null = null;
   private currentStep = 0;
@@ -14,18 +19,27 @@ class AudioEngine {
 
   constructor() {
     this.delay = new Tone.FeedbackDelay('4n', 0.6).toDestination();
-    this.synth = new Tone.PolySynth(Tone.Synth);
-    this.synth.set({
-      oscillator: { type: 'triangle8' },
-      envelope: { attack: 0.2, decay: 4, sustain: 1, release: 4 },
-    });
-    this.synth.connect(this.delay);
-    this.synth.toDestination();
+    this.trackParams = Array.from({ length: ROW_COUNT }, () => ({ ...DEFAULT_TRACK_PARAMS }));
+    this.bundles = this.trackParams.map((p) => createSynthBundle(p, this.delay));
   }
 
   init(matrixRef: MatrixRef, onStep: OnStepCallback) {
     this.matrixRef = matrixRef;
     this.onStep = onStep;
+  }
+
+  updateTrackSynth(row: number, params: TrackSynthParams) {
+    if (row < 0 || row >= ROW_COUNT) return;
+    this.trackParams[row] = params;
+    updateSynthBundle(this.bundles[row], params);
+  }
+
+  private isTrackAudible(row: number): boolean {
+    const params = this.trackParams[row];
+    if (params.mute) return false;
+    const anySolo = this.trackParams.some((p) => p.solo);
+    if (anySolo && !params.solo) return false;
+    return true;
   }
 
   start(bpm: number) {
@@ -40,10 +54,10 @@ class AudioEngine {
         this.onStep?.(step);
 
         for (let row = 0; row < matrix.length; row++) {
-          if (matrix[row][step] === 1) {
+          if (matrix[row][step] === 1 && this.isTrackAudible(row)) {
             const note = PENTATONIC_SCALE[row];
             if (note) {
-              this.synth.triggerAttackRelease(note, '8n', time);
+              this.bundles[row].synth.triggerAttackRelease(note, '8n', time);
             }
           }
         }

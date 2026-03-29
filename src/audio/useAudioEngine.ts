@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useSequencer } from '../contexts/SequencerContext';
 import { useTransport } from '../contexts/TransportContext';
+import { useSynth } from '../contexts/SynthContext';
 import { audioEngine } from './engine';
 
 export function useAudioEngine() {
   const { matrix } = useSequencer();
   const { isPlaying, bpm, swing, setActiveStep } = useTransport();
+  const { tracks } = useSynth();
 
   const matrixRef = useRef(matrix);
   useEffect(() => {
@@ -32,4 +34,10 @@ export function useAudioEngine() {
   useEffect(() => {
     audioEngine.setSwing(swing);
   }, [swing]);
+
+  useEffect(() => {
+    tracks.forEach((params, row) => {
+      audioEngine.updateTrackSynth(row, params);
+    });
+  }, [tracks]);
 }

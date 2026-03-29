@@ -7,6 +7,7 @@ import UndoRedo from "./components/UndoRedo";
 import ExportWav from "./components/ExportWav";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
+import { SynthProvider } from "./contexts/SynthContext";
 import { useAudioEngine } from "./audio/useAudioEngine";
 
 function AudioEngineConnector() {
@@ -18,6 +19,7 @@ function App() {
   return (
     <SequencerProvider>
       <TransportProvider>
+        <SynthProvider>
         <AudioEngineConnector />
         <div className="App crt">
           <div className="bit-card">
@@ -29,6 +31,7 @@ function App() {
             </div>
           </div>
         </div>
+        </SynthProvider>
       </TransportProvider>
     </SequencerProvider>
   );
