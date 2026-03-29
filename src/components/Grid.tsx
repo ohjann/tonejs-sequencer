@@ -2,29 +2,34 @@ import React from 'react';
 import Cell from './Cell';
 import { useSequencer } from '../contexts/SequencerContext';
 import { useTransport } from '../contexts/TransportContext';
+import StepCountSelector from './StepCountSelector';
 import '../styles/App.css';
 
 const Grid = () => {
-  const { matrix, toggleCell, scaleNotes } = useSequencer();
+  const { matrix, toggleCell, cycleVelocity, scaleNotes, stepCount } = useSequencer();
   const { activeStep } = useTransport();
 
   return (
-    <div className='grid'>
-      {matrix.map((row, rowIndex) => (
-        <div key={rowIndex} className='row'>
-          <span className='row-label'>{scaleNotes[rowIndex] ?? ''}</span>
-          {row.map((cell, colIndex) => (
-            <Cell
-              key={`${rowIndex}-${colIndex}`}
-              row={rowIndex}
-              col={colIndex}
-              active={colIndex === activeStep}
-              toggled={Boolean(cell)}
-              onToggle={toggleCell}
-            />
-          ))}
-        </div>
-      ))}
+    <div className="grid-container">
+      <StepCountSelector />
+      <div className='grid' data-steps={stepCount}>
+        {matrix.map((row, rowIndex) => (
+          <div key={rowIndex} className='row'>
+            <span className='row-label'>{scaleNotes[rowIndex] ?? ''}</span>
+            {row.map((cell, colIndex) => (
+              <Cell
+                key={`${rowIndex}-${colIndex}`}
+                row={rowIndex}
+                col={colIndex}
+                active={colIndex === activeStep}
+                velocity={cell}
+                onToggle={toggleCell}
+                onCycleVelocity={cycleVelocity}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

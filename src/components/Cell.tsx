@@ -6,15 +6,27 @@ interface CellProps {
   row: number;
   col: number;
   active: boolean;
-  toggled: boolean;
+  velocity: number;
   onToggle: (coords: ICoordinates) => void;
+  onCycleVelocity: (coords: ICoordinates) => void;
 }
 
-const Cell = React.memo(({ row, col, active, toggled, onToggle }: CellProps) => {
-  const handleClick = useCallback(() => onToggle({ row, col }), [onToggle, row, col]);
+const Cell = React.memo(({ row, col, active, velocity, onToggle, onCycleVelocity }: CellProps) => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    if (e.shiftKey && velocity > 0) {
+      onCycleVelocity({ row, col });
+    } else {
+      onToggle({ row, col });
+    }
+  }, [onToggle, onCycleVelocity, row, col, velocity]);
+
+  let className = 'square';
+  if (active) className += ' active';
+  if (velocity > 0) className += ` toggled vel-${velocity}`;
+
   return (
     <div
-      className={`square${active ? ' active' : ''}${toggled ? ' toggled' : ''}`}
+      className={className}
       onClick={handleClick}
     />
   );

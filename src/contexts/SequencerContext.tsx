@@ -6,13 +6,17 @@ export interface ICoordinates {
   col: number;
 }
 
+export type StepCount = 8 | 12 | 16 | 32;
+export const STEP_COUNT_OPTIONS: StepCount[] = [8, 12, 16, 32];
+export const MAX_VELOCITY = 3;
+
 const ROWS = 12;
-const COLS = 12;
+const DEFAULT_COLS = 12;
 const NUM_PATTERNS = 8;
 const MAX_HISTORY = 50;
 
-function emptyGrid(): number[][] {
-  return Array.from(Array(ROWS), () => Array(COLS).fill(0));
+function emptyGrid(cols: number = DEFAULT_COLS): number[][] {
+  return Array.from(Array(ROWS), () => Array(cols).fill(0));
 }
 
 interface SequencerState {
@@ -24,10 +28,12 @@ interface SequencerState {
   future: number[][][];
   scaleName: ScaleName;
   rootNote: RootNote;
+  stepCount: StepCount;
 }
 
 type SequencerAction =
   | { type: 'TOGGLE_CELL'; payload: ICoordinates }
+  | { type: 'CYCLE_VELOCITY'; payload: ICoordinates }
   | { type: 'CLEAR_GRID' }
   | { type: 'UNDO' }
   | { type: 'REDO' }
@@ -36,10 +42,11 @@ type SequencerAction =
   | { type: 'SWITCH_PATTERN'; payload: number }
   | { type: 'COPY_PATTERN' }
   | { type: 'PASTE_PATTERN' }
-  | { type: 'SET_PATTERN_CHAIN'; payload: number[] };
+  | { type: 'SET_PATTERN_CHAIN'; payload: number[] }
+  | { type: 'SET_STEP_COUNT'; payload: StepCount };
 
 const initialState: SequencerState = {
-  patterns: Array.from({ length: NUM_PATTERNS }, emptyGrid),
+  patterns: Array.from({ length: NUM_PATTERNS }, () => emptyGrid(DEFAULT_COLS)),
   activePattern: 0,
   patternChain: [0],
   clipboard: null,
@@ -47,6 +54,7 @@ const initialState: SequencerState = {
   future: [],
   scaleName: 'pentatonic',
   rootNote: 'A',
+  stepCount: DEFAULT_COLS as StepCount,
 };
 
 function sequencerReducer(state: SequencerState, action: SequencerAction): SequencerState {
@@ -56,7 +64,21 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
     case 'TOGGLE_CELL': {
       const { row, col } = action.payload;
       const newMatrix = currentMatrix.map((r, ri) =>
-        ri === row ? r.map((c, ci) => (ci === col ? 1 - c : c)) : r
+        ri === row ? r.map((c, ci) => (ci === col ? (c > 0 ? 0 : 1) : c)) : r
+      );
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? newMatrix : p
+      );
+      const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
+      return { ...state, patterns: newPatterns, past: newPast, future: [] };
+    }
+    case 'CYCLE_VELOCITY': {
+      const { row, col } = action.payload;
+      const current = currentMatrix[row]?.[col] ?? 0;
+      if (current === 0) return state;
+      const next = (current % MAX_VELOCITY) + 1;
+      const newMatrix = currentMatrix.map((r, ri) =>
+        ri === row ? r.map((c, ci) => (ci === col ? next : c)) : r
       );
       const newPatterns = state.patterns.map((p, i) =>
         i === state.activePattern ? newMatrix : p
@@ -111,6 +133,19 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
     case 'SET_PATTERN_CHAIN': {
       return { ...state, patternChain: action.payload };
     }
+    case 'SET_STEP_COUNT': {
+      const newStepCount = action.payload;
+      const newPatterns = state.patterns.map(pattern =>
+        pattern.map(row => {
+          if (row.length === newStepCount) return row;
+          if (row.length < newStepCount) {
+            return [...row, ...Array(newStepCount - row.length).fill(0)];
+          }
+          return row.slice(0, newStepCount);
+        })
+      );
+      return { ...state, patterns: newPatterns, stepCount: newStepCount, past: [], future: [] };
+    }
     case 'SET_SCALE':
       return { ...state, scaleName: action.payload };
     case 'SET_ROOT_NOTE':
@@ -123,6 +158,7 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
 interface SequencerContextValue {
   matrix: number[][];
   toggleCell: (coords: ICoordinates) => void;
+  cycleVelocity: (coords: ICoordinates) => void;
   clearGrid: () => void;
   undo: () => void;
   redo: () => void;
@@ -142,6 +178,8 @@ interface SequencerContextValue {
   pastePattern: () => void;
   setPatternChain: (chain: number[]) => void;
   numPatterns: number;
+  stepCount: StepCount;
+  setStepCount: (count: StepCount) => void;
 }
 
 const SequencerContext = createContext<SequencerContextValue | null>(null);
@@ -150,6 +188,7 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(sequencerReducer, initialState);
 
   const toggleCell = useCallback((coords: ICoordinates) => dispatch({ type: 'TOGGLE_CELL', payload: coords }), []);
+  const cycleVelocity = useCallback((coords: ICoordinates) => dispatch({ type: 'CYCLE_VELOCITY', payload: coords }), []);
   const clearGrid = useCallback(() => dispatch({ type: 'CLEAR_GRID' }), []);
   const undo = useCallback(() => dispatch({ type: 'UNDO' }), []);
   const redo = useCallback(() => dispatch({ type: 'REDO' }), []);
@@ -159,6 +198,7 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
   const copyPattern = useCallback(() => dispatch({ type: 'COPY_PATTERN' }), []);
   const pastePattern = useCallback(() => dispatch({ type: 'PASTE_PATTERN' }), []);
   const setPatternChain = useCallback((chain: number[]) => dispatch({ type: 'SET_PATTERN_CHAIN', payload: chain }), []);
+  const setStepCount = useCallback((count: StepCount) => dispatch({ type: 'SET_STEP_COUNT', payload: count }), []);
 
   const scaleNotes = useMemo(
     () => generateScaleNotes(state.scaleName, state.rootNote, state.patterns[state.activePattern].length),
@@ -183,6 +223,7 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
     <SequencerContext.Provider value={{
       matrix: state.patterns[state.activePattern],
       toggleCell,
+      cycleVelocity,
       clearGrid,
       undo,
       redo,
@@ -202,6 +243,8 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
       pastePattern,
       setPatternChain,
       numPatterns: NUM_PATTERNS,
+      stepCount: state.stepCount,
+      setStepCount,
     }}>
       {children}
     </SequencerContext.Provider>

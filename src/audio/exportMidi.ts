@@ -1,7 +1,8 @@
 import MidiWriter from 'midi-writer-js';
-import { PENTATONIC_SCALE } from './scales';
+import { generateScaleNotes } from './scales';
 
-export function exportPatternAsMidi(matrix: number[][], bpm: number): void {
+export function exportPatternAsMidi(matrix: number[][], bpm: number, scaleNotes?: string[]): void {
+  const notes = scaleNotes ?? generateScaleNotes('pentatonic', 'A', matrix.length);
   const cols = matrix[0]?.length ?? 0;
   if (cols === 0) return;
 
@@ -12,21 +13,22 @@ export function exportPatternAsMidi(matrix: number[][], bpm: number): void {
   const ticksPerStep = 64;
 
   for (let step = 0; step < cols; step++) {
-    const pitches: string[] = [];
     for (let row = 0; row < matrix.length; row++) {
-      if (matrix[row][step] === 1) {
-        const note = PENTATONIC_SCALE[row];
-        if (note) pitches.push(note);
+      const velocity = matrix[row][step];
+      if (velocity > 0) {
+        const note = notes[row];
+        if (note) {
+          const midiVel = Math.round((velocity / 3) * 127);
+          track.addEvent(
+            new MidiWriter.NoteEvent({
+              pitch: [note],
+              duration: '8',
+              tick: step * ticksPerStep,
+              velocity: midiVel,
+            })
+          );
+        }
       }
-    }
-    if (pitches.length > 0) {
-      track.addEvent(
-        new MidiWriter.NoteEvent({
-          pitch: pitches,
-          duration: '8',
-          tick: step * ticksPerStep,
-        })
-      );
     }
   }
 

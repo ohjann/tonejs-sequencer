@@ -56,10 +56,12 @@ class AudioEngine {
         this.onStep?.(step);
 
         for (let row = 0; row < matrix.length; row++) {
-          if (matrix[row][step] === 1 && this.isTrackAudible(row)) {
+          const velocity = matrix[row][step];
+          if (velocity > 0 && this.isTrackAudible(row)) {
             const note = this.scaleNotesRef.current[row];
             if (note) {
-              this.bundles[row].synth.triggerAttackRelease(note, '8n', time);
+              const vel = velocity / 3;
+              this.bundles[row].synth.triggerAttackRelease(note, '8n', time, vel);
             }
           }
         }
