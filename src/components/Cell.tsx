@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { ICoordinates } from '../contexts/SequencerContext';
 import '../styles/App.css';
 
@@ -25,9 +26,20 @@ const Cell = React.memo(({ row, col, active, velocity, onToggle, onCycleVelocity
   if (velocity > 0) className += ` toggled vel-${velocity}`;
 
   return (
-    <div
+    <motion.div
       className={className}
       onClick={handleClick}
+      animate={{
+        scale: toggled ? [1, 1.15, 1] : 1,
+        backgroundColor: toggled
+          ? 'var(--bit-color1)'
+          : 'var(--bit-color0)',
+      }}
+      transition={{
+        scale: { duration: 0.15, ease: 'easeOut' },
+        backgroundColor: { duration: 0.12, ease: 'easeOut' },
+      }}
+      whileTap={{ scale: 0.9 }}
     />
   );
 });

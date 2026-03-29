@@ -35,6 +35,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   display: block;
+  position: relative;
 }
 .grid[data-steps="8"] { width: 356px; }
 .grid[data-steps="12"] { width: 516px; }
@@ -78,6 +79,7 @@ body {
   display: inline-block;
   background-color: var(--bit-color0);
   box-sizing: border-box;
+  will-change: transform;
 }
 .square:hover, .square.active {
   border-color: var(--bit-color0);
@@ -102,6 +104,37 @@ body {
 }
 .square.toggled.vel-3 {
   background-color: var(--bit-color1);
+}
+
+/* Step indicator track */
+.step-indicator-track {
+  position: relative;
+  height: 3px;
+  width: 480px;
+  margin-left: 36px;
+  margin-bottom: 2px;
+  overflow: hidden;
+}
+.step-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--bit-color1);
+  opacity: 0.8;
+}
+
+/* Active column glow overlay */
+.column-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 100%;
+  background: var(--bit-color1);
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
 
 :focus {

@@ -4,11 +4,11 @@ import { useTransport } from '../contexts/TransportContext';
 import { exportPatternAsMidi } from '../audio/exportMidi';
 
 const ExportMidi = () => {
-  const { matrix } = useSequencer();
+  const { matrix, scaleNotes } = useSequencer();
   const { bpm } = useTransport();
 
   const handleExport = () => {
-    exportPatternAsMidi(matrix, bpm);
+    exportPatternAsMidi(matrix, bpm, scaleNotes);
   };
 
   return (

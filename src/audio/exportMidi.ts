@@ -1,10 +1,11 @@
 import MidiWriter from 'midi-writer-js';
-import { generateScaleNotes } from './scales';
+import { PENTATONIC_SCALE } from './scales';
 
 export function exportPatternAsMidi(matrix: number[][], bpm: number, scaleNotes?: string[]): void {
-  const notes = scaleNotes ?? generateScaleNotes('pentatonic', 'A', matrix.length);
   const cols = matrix[0]?.length ?? 0;
   if (cols === 0) return;
+
+  const notes = scaleNotes ?? generateScaleNotes('pentatonic', 'A', matrix.length);
 
   const track = new MidiWriter.Track();
   track.setTempo(bpm);
