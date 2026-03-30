@@ -56,7 +56,7 @@ export function generateScaleNotes(scaleName: ScaleName, rootNote: RootNote, cou
   const rootIndex = NOTE_NAMES.indexOf(rootNote);
   const notes: string[] = [];
 
-  for (let octave = 6; octave >= 1 && notes.length < count; octave--) {
+  for (let octave = 4; octave >= 1 && notes.length < count; octave--) {
     for (const interval of [...intervals].sort((a, b) => b - a)) {
       const noteSemitone = rootIndex + interval;
       const noteIndex = noteSemitone % 12;

@@ -5,7 +5,7 @@ import { useSynth } from '../contexts/SynthContext';
 import { audioEngine } from './engine';
 
 export function useAudioEngine() {
-  const { patterns, patternChain, scaleNotes, switchPattern } = useSequencer();
+  const { patterns, patternChain, scaleNotes, switchPattern, gameOfLifeActive, gameOfLifeTick } = useSequencer();
   const { isPlaying, bpm, swing, setActiveStep } = useTransport();
   const { tracks, masterVolume } = useSynth();
 
@@ -28,9 +28,21 @@ export function useAudioEngine() {
     switchPattern(patternIdx);
   }, [switchPattern]);
 
+  const gameOfLifeActiveRef = useRef(gameOfLifeActive);
   useEffect(() => {
-    audioEngine.init(patternsRef, patternChainRef, scaleNotesRef, setActiveStep, onPatternChange);
-  }, [setActiveStep, onPatternChange]);
+    gameOfLifeActiveRef.current = gameOfLifeActive;
+  }, [gameOfLifeActive]);
+
+  const onLoopRestart = useCallback(() => {
+    if (gameOfLifeActiveRef.current) {
+      gameOfLifeTick();
+    }
+  }, [gameOfLifeTick]);
+
+
+  useEffect(() => {
+    audioEngine.init(patternsRef, patternChainRef, scaleNotesRef, setActiveStep, onPatternChange, onLoopRestart);
+  }, [setActiveStep, onPatternChange, onLoopRestart]);
 
   useEffect(() => {
     if (isPlaying) {

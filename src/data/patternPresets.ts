@@ -1,6 +1,7 @@
 export interface PatternPreset {
   name: string;
   grid: number[][];
+  gameOfLife?: boolean;
 }
 
 const ROWS = 12;
@@ -17,6 +18,8 @@ function makeGrid(cells: [number, number][]): number[][] {
   }
   return grid;
 }
+
+import { randomSeed } from '../utils/gameOfLife';
 
 export const patternPresets: PatternPreset[] = [
   {
@@ -81,5 +84,10 @@ export const patternPresets: PatternPreset[] = [
       [11, 0], [9, 1], [7, 2],
       [5, 6], [3, 7], [1, 8],
     ]),
+  },
+  {
+    name: 'Game of Life',
+    grid: emptyGrid(),
+    gameOfLife: true,
   },
 ];

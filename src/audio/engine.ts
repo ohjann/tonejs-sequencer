@@ -7,6 +7,7 @@ type PatternChainRef = { current: number[] };
 type ScaleNotesRef = { current: string[] };
 type OnStepCallback = (step: number) => void;
 type OnPatternChange = (patternIdx: number) => void;
+type OnLoopRestart = () => void;
 
 const ROW_COUNT = 12;
 
@@ -22,6 +23,7 @@ class AudioEngine {
   private scaleNotesRef: ScaleNotesRef = { current: [] };
   private onStep: OnStepCallback | null = null;
   private onPatternChange: OnPatternChange | null = null;
+  private onLoopRestart: OnLoopRestart | null = null;
 
   constructor() {
     this.delay = new Tone.FeedbackDelay('4n', 0.6).toDestination();
@@ -35,12 +37,14 @@ class AudioEngine {
     scaleNotesRef: ScaleNotesRef,
     onStep: OnStepCallback,
     onPatternChange: OnPatternChange,
+    onLoopRestart?: OnLoopRestart,
   ) {
     this.patternsRef = patternsRef;
     this.patternChainRef = patternChainRef;
     this.scaleNotesRef = scaleNotesRef;
     this.onStep = onStep;
     this.onPatternChange = onPatternChange;
+    this.onLoopRestart = onLoopRestart ?? null;
   }
 
   updateTrackSynth(row: number, params: TrackSynthParams) {
@@ -92,7 +96,10 @@ class AudioEngine {
         this.currentStep = 0;
         const nextChainIndex = (this.chainIndex + 1) % chain.length;
         this.chainIndex = nextChainIndex;
-        Tone.getDraw().schedule(() => this.onPatternChange?.(chain[nextChainIndex]), time);
+        Tone.getDraw().schedule(() => {
+          this.onPatternChange?.(chain[nextChainIndex]);
+          this.onLoopRestart?.();
+        }, time);
       } else {
         this.currentStep = nextStep;
       }

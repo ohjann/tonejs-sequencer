@@ -3,6 +3,7 @@ import { useSynth } from '../contexts/SynthContext';
 import { useSequencer } from '../contexts/SequencerContext';
 import { synthPresets } from '../data/synthPresets';
 import { patternPresets } from '../data/patternPresets';
+import { randomSeed } from '../utils/gameOfLife';
 import Select from './Select';
 
 interface SynthPresetSelectProps {
@@ -31,7 +32,7 @@ export const SynthPresetSelect: React.FC<SynthPresetSelectProps> = ({ trackIndex
 };
 
 export const PatternPresetSelect: React.FC = () => {
-  const { setGrid } = useSequencer();
+  const { setGrid, setGameOfLifeActive, stepCount } = useSequencer();
   const [selected, setSelected] = useState('');
 
   const options = [
@@ -44,7 +45,14 @@ export const PatternPresetSelect: React.FC = () => {
     if (value === '') return;
     const preset = patternPresets[Number(value)];
     if (preset) {
-      setGrid(preset.grid.map(row => [...row]));
+      if (preset.gameOfLife) {
+        const seed = randomSeed(12, stepCount);
+        setGrid(seed);
+        setGameOfLifeActive(true);
+      } else {
+        setGameOfLifeActive(false);
+        setGrid(preset.grid.map(row => [...row]));
+      }
     }
   };
 

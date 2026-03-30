@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
 import { ScaleName, RootNote, generateScaleNotes } from '../audio/scales';
+import { nextGeneration, gridsEqual, gridEmpty } from '../utils/gameOfLife';
 
 export interface ICoordinates {
   row: number;
@@ -29,6 +30,7 @@ interface SequencerState {
   scaleName: ScaleName;
   rootNote: RootNote;
   stepCount: StepCount;
+  gameOfLifeActive: boolean;
 }
 
 type SequencerAction =
@@ -44,7 +46,9 @@ type SequencerAction =
   | { type: 'PASTE_PATTERN' }
   | { type: 'SET_PATTERN_CHAIN'; payload: number[] }
   | { type: 'SET_STEP_COUNT'; payload: StepCount }
-  | { type: 'SET_GRID'; payload: number[][] };
+  | { type: 'SET_GRID'; payload: number[][] }
+  | { type: 'SET_GAME_OF_LIFE'; payload: boolean }
+  | { type: 'GAME_OF_LIFE_TICK' };
 
 const initialState: SequencerState = {
   patterns: Array.from({ length: NUM_PATTERNS }, () => emptyGrid(DEFAULT_COLS)),
@@ -56,6 +60,7 @@ const initialState: SequencerState = {
   scaleName: 'pentatonic',
   rootNote: 'A',
   stepCount: DEFAULT_COLS as StepCount,
+  gameOfLifeActive: false,
 };
 
 function sequencerReducer(state: SequencerState, action: SequencerAction): SequencerState {
@@ -93,7 +98,7 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
         i === state.activePattern ? newMatrix : p
       );
       const newPast = [...state.past, currentMatrix].slice(-MAX_HISTORY);
-      return { ...state, patterns: newPatterns, past: newPast, future: [] };
+      return { ...state, patterns: newPatterns, past: newPast, future: [], gameOfLifeActive: false };
     }
     case 'UNDO': {
       if (state.past.length === 0) return state;
@@ -154,6 +159,19 @@ function sequencerReducer(state: SequencerState, action: SequencerAction): Seque
       );
       return { ...state, patterns: newPatterns, past: newPast, future: [] };
     }
+    case 'SET_GAME_OF_LIFE':
+      return { ...state, gameOfLifeActive: action.payload };
+    case 'GAME_OF_LIFE_TICK': {
+      if (!state.gameOfLifeActive) return state;
+      const gen = nextGeneration(currentMatrix);
+      if (gridEmpty(gen) || gridsEqual(gen, currentMatrix)) {
+        return { ...state, gameOfLifeActive: false };
+      }
+      const newPatterns = state.patterns.map((p, i) =>
+        i === state.activePattern ? gen : p
+      );
+      return { ...state, patterns: newPatterns };
+    }
     case 'SET_SCALE':
       return { ...state, scaleName: action.payload };
     case 'SET_ROOT_NOTE':
@@ -189,6 +207,9 @@ interface SequencerContextValue {
   numPatterns: number;
   stepCount: StepCount;
   setStepCount: (count: StepCount) => void;
+  gameOfLifeActive: boolean;
+  setGameOfLifeActive: (active: boolean) => void;
+  gameOfLifeTick: () => void;
 }
 
 const SequencerContext = createContext<SequencerContextValue | null>(null);
@@ -209,6 +230,8 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
   const setPatternChain = useCallback((chain: number[]) => dispatch({ type: 'SET_PATTERN_CHAIN', payload: chain }), []);
   const setStepCount = useCallback((count: StepCount) => dispatch({ type: 'SET_STEP_COUNT', payload: count }), []);
   const setGrid = useCallback((grid: number[][]) => dispatch({ type: 'SET_GRID', payload: grid }), []);
+  const setGameOfLifeActive = useCallback((active: boolean) => dispatch({ type: 'SET_GAME_OF_LIFE', payload: active }), []);
+  const gameOfLifeTick = useCallback(() => dispatch({ type: 'GAME_OF_LIFE_TICK' }), []);
 
   const scaleNotes = useMemo(
     () => generateScaleNotes(state.scaleName, state.rootNote, state.patterns[state.activePattern].length),
@@ -256,6 +279,9 @@ export function SequencerProvider({ children }: { children: React.ReactNode }) {
       numPatterns: NUM_PATTERNS,
       stepCount: state.stepCount,
       setStepCount,
+      gameOfLifeActive: state.gameOfLifeActive,
+      setGameOfLifeActive,
+      gameOfLifeTick,
     }}>
       {children}
     </SequencerContext.Provider>
