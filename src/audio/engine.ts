@@ -2,9 +2,11 @@ import * as Tone from 'tone';
 import { TrackSynthParams, DEFAULT_TRACK_PARAMS } from '../contexts/SynthContext';
 import { SynthBundle, createSynthBundle, updateSynthBundle } from './synth-factory';
 
-type MatrixRef = { current: number[][] | null };
+type PatternsRef = { current: number[][][] };
+type PatternChainRef = { current: number[] };
 type ScaleNotesRef = { current: string[] };
 type OnStepCallback = (step: number) => void;
+type OnPatternChange = (patternIdx: number) => void;
 
 const ROW_COUNT = 12;
 
@@ -14,9 +16,12 @@ class AudioEngine {
   private delay: Tone.FeedbackDelay;
   private scheduleId: number | null = null;
   private currentStep = 0;
-  private matrixRef: MatrixRef = { current: null };
+  private chainIndex = 0;
+  private patternsRef: PatternsRef = { current: [] };
+  private patternChainRef: PatternChainRef = { current: [0] };
   private scaleNotesRef: ScaleNotesRef = { current: [] };
   private onStep: OnStepCallback | null = null;
+  private onPatternChange: OnPatternChange | null = null;
 
   constructor() {
     this.delay = new Tone.FeedbackDelay('4n', 0.6).toDestination();
@@ -24,10 +29,18 @@ class AudioEngine {
     this.bundles = this.trackParams.map((p) => createSynthBundle(p, this.delay));
   }
 
-  init(matrixRef: MatrixRef, scaleNotesRef: ScaleNotesRef, onStep: OnStepCallback) {
-    this.matrixRef = matrixRef;
+  init(
+    patternsRef: PatternsRef,
+    patternChainRef: PatternChainRef,
+    scaleNotesRef: ScaleNotesRef,
+    onStep: OnStepCallback,
+    onPatternChange: OnPatternChange,
+  ) {
+    this.patternsRef = patternsRef;
+    this.patternChainRef = patternChainRef;
     this.scaleNotesRef = scaleNotesRef;
     this.onStep = onStep;
+    this.onPatternChange = onPatternChange;
   }
 
   updateTrackSynth(row: number, params: TrackSynthParams) {
@@ -44,29 +57,44 @@ class AudioEngine {
     return true;
   }
 
-  start(bpm: number) {
+  async start(bpm: number) {
+    await Tone.start();
     Tone.getTransport().bpm.value = bpm;
     this.currentStep = 0;
+    this.chainIndex = 0;
 
     this.scheduleId = Tone.getTransport().scheduleRepeat((time) => {
-      const matrix = this.matrixRef.current;
-      if (matrix) {
-        const cols = matrix[0]?.length ?? 0;
-        const step = this.currentStep % cols;
-        this.onStep?.(step);
+      const chain = this.patternChainRef.current;
+      const patterns = this.patternsRef.current;
+      if (chain.length === 0 || patterns.length === 0) return;
 
-        for (let row = 0; row < matrix.length; row++) {
-          const velocity = matrix[row][step];
-          if (velocity > 0 && this.isTrackAudible(row)) {
-            const note = this.scaleNotesRef.current[row];
-            if (note) {
-              const vel = velocity / 3;
-              this.bundles[row].synth.triggerAttackRelease(note, '8n', time, vel);
-            }
+      const patternIdx = chain[this.chainIndex % chain.length];
+      const matrix = patterns[patternIdx];
+      if (!matrix) return;
+
+      const cols = matrix[0]?.length ?? 0;
+      const step = this.currentStep % cols;
+      Tone.getDraw().schedule(() => this.onStep?.(step), time);
+
+      for (let row = 0; row < matrix.length; row++) {
+        const velocity = matrix[row][step];
+        if (velocity > 0 && this.isTrackAudible(row)) {
+          const note = this.scaleNotesRef.current[row];
+          if (note) {
+            const vel = velocity / 3;
+            this.bundles[row].synth.triggerAttackRelease(note, '8n', time, vel);
           }
         }
+      }
 
-        this.currentStep = (step + 1) % cols;
+      const nextStep = step + 1;
+      if (nextStep >= cols) {
+        this.currentStep = 0;
+        const nextChainIndex = (this.chainIndex + 1) % chain.length;
+        this.chainIndex = nextChainIndex;
+        Tone.getDraw().schedule(() => this.onPatternChange?.(chain[nextChainIndex]), time);
+      } else {
+        this.currentStep = nextStep;
       }
     }, '8n');
 
@@ -90,6 +118,10 @@ class AudioEngine {
   setSwing(swing: number) {
     Tone.getTransport().swing = swing;
     Tone.getTransport().swingSubdivision = '8n';
+  }
+
+  setMasterVolume(volume: number) {
+    Tone.getDestination().volume.value = volume;
   }
 }
 

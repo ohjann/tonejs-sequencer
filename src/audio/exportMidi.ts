@@ -1,5 +1,5 @@
 import MidiWriter from 'midi-writer-js';
-import { PENTATONIC_SCALE } from './scales';
+import { generateScaleNotes } from './scales';
 
 export function exportPatternAsMidi(matrix: number[][], bpm: number, scaleNotes?: string[]): void {
   const cols = matrix[0]?.length ?? 0;

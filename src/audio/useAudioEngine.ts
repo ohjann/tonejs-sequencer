@@ -1,27 +1,36 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useSequencer } from '../contexts/SequencerContext';
 import { useTransport } from '../contexts/TransportContext';
 import { useSynth } from '../contexts/SynthContext';
 import { audioEngine } from './engine';
 
 export function useAudioEngine() {
-  const { matrix, scaleNotes } = useSequencer();
+  const { patterns, patternChain, scaleNotes, switchPattern } = useSequencer();
   const { isPlaying, bpm, swing, setActiveStep } = useTransport();
-  const { tracks } = useSynth();
+  const { tracks, masterVolume } = useSynth();
 
-  const matrixRef = useRef(matrix);
+  const patternsRef = useRef(patterns);
   useEffect(() => {
-    matrixRef.current = matrix;
-  }, [matrix]);
+    patternsRef.current = patterns;
+  }, [patterns]);
+
+  const patternChainRef = useRef(patternChain);
+  useEffect(() => {
+    patternChainRef.current = patternChain;
+  }, [patternChain]);
 
   const scaleNotesRef = useRef(scaleNotes);
   useEffect(() => {
     scaleNotesRef.current = scaleNotes;
   }, [scaleNotes]);
 
+  const onPatternChange = useCallback((patternIdx: number) => {
+    switchPattern(patternIdx);
+  }, [switchPattern]);
+
   useEffect(() => {
-    audioEngine.init(matrixRef, scaleNotesRef, setActiveStep);
-  }, [setActiveStep]);
+    audioEngine.init(patternsRef, patternChainRef, scaleNotesRef, setActiveStep, onPatternChange);
+  }, [setActiveStep, onPatternChange]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -45,4 +54,8 @@ export function useAudioEngine() {
       audioEngine.updateTrackSynth(row, params);
     });
   }, [tracks]);
+
+  useEffect(() => {
+    audioEngine.setMasterVolume(masterVolume);
+  }, [masterVolume]);
 }

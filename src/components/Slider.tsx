@@ -20,21 +20,12 @@ const Slider: React.FC<SliderProps> = ({ value, onChange, min = 0, max = 1, labe
       )}
       <input
         type="range"
-        className="bit-range"
+        className="bit-1bit-slider"
         min={min}
         max={max}
         step={step}
         value={value}
         onChange={e => onChange(Number(e.target.value))}
-        style={{
-          WebkitAppearance: 'none',
-          appearance: 'none',
-          width: '120px',
-          height: '4px',
-          background: 'var(--bit-color0)',
-          outline: 'none',
-          cursor: 'pointer',
-        }}
       />
     </div>
   );

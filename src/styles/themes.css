@@ -1,29 +1,29 @@
 /* Theme: Classic (default 1-bit retro) */
-[data-theme="classic"] {
+[data-theme="classic"] .bit-root {
   --bit-color0: #3e232c;
   --bit-color1: #edf6d6;
 }
 
 /* Theme: CRT Green */
-[data-theme="crt-green"] {
+[data-theme="crt-green"] .bit-root {
   --bit-color0: #0a1a0a;
   --bit-color1: #33ff33;
 }
 
 /* Theme: Inverse */
-[data-theme="inverse"] {
+[data-theme="inverse"] .bit-root {
   --bit-color0: #edf6d6;
   --bit-color1: #3e232c;
 }
 
 /* Theme: Midnight */
-[data-theme="midnight"] {
+[data-theme="midnight"] .bit-root {
   --bit-color0: #c0c8e0;
   --bit-color1: #0d1117;
 }
 
 /* Theme: Hacker */
-[data-theme="hacker"] {
+[data-theme="hacker"] .bit-root {
   --bit-color0: #00ff41;
   --bit-color1: #0d0208;
 }

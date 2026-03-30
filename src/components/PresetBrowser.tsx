@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSynth } from '../contexts/SynthContext';
 import { useSequencer } from '../contexts/SequencerContext';
 import { synthPresets } from '../data/synthPresets';
@@ -11,6 +11,7 @@ interface SynthPresetSelectProps {
 
 export const SynthPresetSelect: React.FC<SynthPresetSelectProps> = ({ trackIndex }) => {
   const { setTrackParams } = useSynth();
+  const [selected, setSelected] = useState('');
 
   const options = [
     { value: '', label: '-- Synth Preset --' },
@@ -18,6 +19,7 @@ export const SynthPresetSelect: React.FC<SynthPresetSelectProps> = ({ trackIndex
   ];
 
   const handleChange = (value: string) => {
+    setSelected(value);
     if (value === '') return;
     const preset = synthPresets[Number(value)];
     if (preset) {
@@ -25,11 +27,12 @@ export const SynthPresetSelect: React.FC<SynthPresetSelectProps> = ({ trackIndex
     }
   };
 
-  return <Select value="" onChange={handleChange} options={options} label="Synth Preset" />;
+  return <Select value={selected} onChange={handleChange} options={options} />;
 };
 
 export const PatternPresetSelect: React.FC = () => {
   const { setGrid } = useSequencer();
+  const [selected, setSelected] = useState('');
 
   const options = [
     { value: '', label: '-- Pattern Preset --' },
@@ -37,6 +40,7 @@ export const PatternPresetSelect: React.FC = () => {
   ];
 
   const handleChange = (value: string) => {
+    setSelected(value);
     if (value === '') return;
     const preset = patternPresets[Number(value)];
     if (preset) {
@@ -44,5 +48,5 @@ export const PatternPresetSelect: React.FC = () => {
     }
   };
 
-  return <Select value="" onChange={handleChange} options={options} label="Pattern Preset" />;
+  return <Select value={selected} onChange={handleChange} options={options} />;
 };

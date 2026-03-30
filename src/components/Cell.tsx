@@ -30,8 +30,8 @@ const Cell = React.memo(({ row, col, active, velocity, onToggle, onCycleVelocity
       className={className}
       onClick={handleClick}
       animate={{
-        scale: toggled ? [1, 1.15, 1] : 1,
-        backgroundColor: toggled
+        scale: velocity > 0 ? [1, 1.15, 1] : 1,
+        backgroundColor: velocity > 0
           ? 'var(--bit-color1)'
           : 'var(--bit-color0)',
       }}
