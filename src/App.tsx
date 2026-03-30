@@ -10,7 +10,6 @@ import PatternSelector from "./components/PatternSelector";
 import PatternChain from "./components/PatternChain";
 import MasterVolume from "./components/MasterVolume";
 import { PatternPresetSelect } from "./components/PresetBrowser";
-import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import { SequencerProvider } from "./contexts/SequencerContext";
 import { TransportProvider } from "./contexts/TransportContext";
@@ -36,7 +35,6 @@ function App() {
           <SynthProvider>
             <AudioEngineConnector />
             <div className="flex flex-col h-screen overflow-hidden crt">
-              <Header />
               <div className="flex flex-1 overflow-hidden">
                 <main className="flex-1 overflow-auto flex justify-center items-start">
                   <motion.div

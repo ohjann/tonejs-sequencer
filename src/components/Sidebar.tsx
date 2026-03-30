@@ -6,6 +6,10 @@ import MasterVolume from "./MasterVolume";
 import Knob from "./Knob";
 import Select from "./Select";
 import { SynthPresetSelect } from "./PresetBrowser";
+import ThemeSwitcher from "./ThemeSwitcher";
+import UndoRedo from "./UndoRedo";
+import ExportWav from "./ExportWav";
+import ExportMidi from "./ExportMidi";
 
 const OSC_OPTIONS: { value: OscillatorType; label: string }[] = [
   { value: "sine", label: "Sine" },
@@ -74,7 +78,23 @@ function TrackControls({ trackIndex }: { trackIndex: number }) {
   );
 }
 
-/** Desktop: collapsible right sidebar. Mobile: bottom sheet. */
+function SidebarContent({ trackIndex }: { trackIndex: number }) {
+  return (
+    <div className="flex flex-col gap-2 p-2 overflow-y-auto flex-1">
+      <div className="flex flex-col gap-2 pb-2 border-b" style={{ borderColor: "var(--bit-color0)" }}>
+        <ThemeSwitcher />
+        <UndoRedo />
+        <div className="flex gap-2">
+          <ExportWav />
+          <ExportMidi />
+        </div>
+      </div>
+      <MasterVolume />
+      <TrackControls trackIndex={trackIndex} />
+    </div>
+  );
+}
+
 export default function Sidebar() {
   const { state, toggleSidebar, setSidebar } = useUI();
   const { sidebarOpen, selectedTrack } = state;
@@ -102,18 +122,25 @@ export default function Sidebar() {
         </button>
         {sidebarOpen && (
           <motion.div
-            className="flex flex-col gap-1 p-2 overflow-y-auto flex-1"
+            className="flex flex-col flex-1 overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
           >
-            <MasterVolume />
-            <TrackControls trackIndex={trackIndex} />
+            <SidebarContent trackIndex={trackIndex} />
           </motion.div>
         )}
       </aside>
 
       {/* Mobile bottom sheet */}
+      <button
+        className="bit-button fixed bottom-2 right-2 z-40 md:hidden"
+        onClick={toggleSidebar}
+        style={{ fontSize: "0.8em", padding: "4px 10px" }}
+        aria-label="Toggle settings"
+      >
+        {sidebarOpen ? "Close" : "Settings"}
+      </button>
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -130,7 +157,7 @@ export default function Sidebar() {
           >
             <div className="flex items-center justify-between p-2 border-b" style={{ borderColor: "var(--bit-color0)" }}>
               <span className="font-bold" style={{ fontSize: "0.9em" }}>
-                Synth Controls
+                Settings
               </span>
               <button
                 className="bit-button"
@@ -140,10 +167,7 @@ export default function Sidebar() {
                 Close
               </button>
             </div>
-            <div className="p-2 flex flex-col gap-1">
-              <MasterVolume />
-              <TrackControls trackIndex={trackIndex} />
-            </div>
+            <SidebarContent trackIndex={trackIndex} />
           </motion.div>
         )}
       </AnimatePresence>
