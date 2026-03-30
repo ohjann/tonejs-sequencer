@@ -15,7 +15,7 @@ interface SelectProps {
 const Select: React.FC<SelectProps> = ({ value, onChange, options, label }) => {
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 4 }}>
-      {label && <span style={{ fontSize: '0.75em', color: 'var(--bit-color0)' }}>{label}</span>}
+      {label && <span style={{ fontSize: '0.75em', color: 'var(--1bit-fg)' }}>{label}</span>}
       <select
         className="bit-select"
         value={value}

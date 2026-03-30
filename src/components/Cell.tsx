@@ -32,8 +32,8 @@ const Cell = React.memo(({ row, col, active, velocity, onToggle, onCycleVelocity
       animate={{
         scale: velocity > 0 ? [1, 1.15, 1] : 1,
         backgroundColor: velocity > 0
-          ? 'var(--bit-color1)'
-          : 'var(--bit-color0)',
+          ? 'var(--1bit-bg)'
+          : 'var(--1bit-fg)',
       }}
       transition={{
         scale: { duration: 0.15, ease: 'easeOut' },

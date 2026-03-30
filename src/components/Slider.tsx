@@ -13,7 +13,7 @@ const Slider: React.FC<SliderProps> = ({ value, onChange, min = 0, max = 1, labe
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 4 }}>
       {label && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75em', color: 'var(--bit-color0)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75em', color: 'var(--1bit-fg)' }}>
           <span>{label}</span>
           <span>{value.toFixed(2)}</span>
         </div>

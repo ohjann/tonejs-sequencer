@@ -24,7 +24,7 @@ function TrackControls({ trackIndex }: { trackIndex: number }) {
   const params = tracks[trackIndex];
 
   return (
-    <div className="flex flex-col gap-2 py-2 border-b" style={{ borderColor: "var(--bit-color0)" }}>
+    <div className="flex flex-col gap-2 py-2 border-b" style={{ borderColor: "var(--1bit-fg)" }}>
       <div className="flex items-center justify-between">
         <span className="font-bold" style={{ fontSize: "0.8em" }}>
           Track {trackIndex + 1}
@@ -81,7 +81,7 @@ function TrackControls({ trackIndex }: { trackIndex: number }) {
 function SidebarContent({ trackIndex }: { trackIndex: number }) {
   return (
     <div className="flex flex-col gap-2 p-2 overflow-y-auto flex-1">
-      <div className="flex flex-col gap-2 pb-2 border-b" style={{ borderColor: "var(--bit-color0)" }}>
+      <div className="flex flex-col gap-2 pb-2 border-b" style={{ borderColor: "var(--1bit-fg)" }}>
         <ThemeSwitcher />
         <UndoRedo />
         <div className="flex gap-2">
@@ -91,6 +91,27 @@ function SidebarContent({ trackIndex }: { trackIndex: number }) {
       </div>
       <MasterVolume />
       <TrackControls trackIndex={trackIndex} />
+      <div className="mt-auto pt-2 border-t" style={{ borderColor: "var(--1bit-fg)", opacity: 0.6, fontSize: "0.7em" }}>
+        UI theme by{" "}
+        <a
+          href="https://github.com/jcontini/1bit-ui"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline" }}
+        >
+          1bit-ui
+        </a>
+        {" "}&middot;{" "}
+        Icons by{" "}
+        <a
+          href="https://github.com/halfmage/pixelarticons"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline" }}
+        >
+          pixelarticons
+        </a>
+      </div>
     </div>
   );
 }
@@ -106,8 +127,8 @@ export default function Sidebar() {
       <aside
         className="hidden md:flex flex-col border-l-2 transition-all duration-200 overflow-hidden"
         style={{
-          borderColor: "var(--bit-color0)",
-          background: "var(--bit-color1)",
+          borderColor: "var(--1bit-fg)",
+          background: "var(--1bit-bg)",
           width: sidebarOpen ? 256 : 40,
           minWidth: sidebarOpen ? 256 : 40,
         }}
@@ -146,8 +167,8 @@ export default function Sidebar() {
           <motion.div
             className="fixed inset-x-0 bottom-0 md:hidden border-t-2 overflow-y-auto z-50"
             style={{
-              borderColor: "var(--bit-color0)",
-              background: "var(--bit-color1)",
+              borderColor: "var(--1bit-fg)",
+              background: "var(--1bit-bg)",
               maxHeight: "50vh",
             }}
             initial={{ y: "100%" }}
@@ -155,7 +176,7 @@ export default function Sidebar() {
             exit={{ y: "100%" }}
             transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-between p-2 border-b" style={{ borderColor: "var(--bit-color0)" }}>
+            <div className="flex items-center justify-between p-2 border-b" style={{ borderColor: "var(--1bit-fg)" }}>
               <span className="font-bold" style={{ fontSize: "0.9em" }}>
                 Settings
               </span>

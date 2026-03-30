@@ -13,8 +13,8 @@ export default function Header() {
     <motion.header
       className="flex items-center justify-between px-4 py-2 border-b-2"
       style={{
-        borderColor: "var(--bit-color0)",
-        background: "var(--bit-color1)",
+        borderColor: "var(--1bit-fg)",
+        background: "var(--1bit-bg)",
         minHeight: 48,
       }}
       initial={{ opacity: 0, y: -12 }}
@@ -24,7 +24,7 @@ export default function Header() {
       <div className="flex items-center gap-3">
         <h1
           className="font-bold tracking-tight"
-          style={{ fontSize: "1.1em", color: "var(--bit-color0)", margin: 0 }}
+          style={{ fontSize: "1.1em", color: "var(--1bit-fg)", margin: 0 }}
         >
           Sequencer
         </h1>

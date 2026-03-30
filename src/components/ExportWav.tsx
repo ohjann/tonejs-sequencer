@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Download } from 'pixelarticons/react';
 import { useSequencer } from '../contexts/SequencerContext';
 import { useTransport } from '../contexts/TransportContext';
 import { exportPatternAsWav } from '../audio/exportWav';
@@ -19,7 +20,7 @@ const ExportWav = () => {
 
   return (
     <button className="bit-button" onClick={handleExport} disabled={exporting}>
-      {exporting ? 'Exporting...' : 'Export WAV'}
+      <Download width={14} height={14} /> {exporting ? 'Exporting...' : 'WAV'}
     </button>
   );
 };

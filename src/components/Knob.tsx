@@ -46,7 +46,7 @@ const Knob: React.FC<KnobProps> = ({ value, onChange, min = 0, max = 1, label })
 
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-      {label && <span style={{ fontSize: '0.75em', color: 'var(--bit-color0)' }}>{label}</span>}
+      {label && <span style={{ fontSize: '0.75em', color: 'var(--1bit-fg)' }}>{label}</span>}
       <svg
         width={48}
         height={48}
@@ -57,8 +57,8 @@ const Knob: React.FC<KnobProps> = ({ value, onChange, min = 0, max = 1, label })
           cx={cx}
           cy={cy}
           r={r}
-          fill="var(--bit-color1)"
-          stroke="var(--bit-color0)"
+          fill="var(--1bit-bg)"
+          stroke="var(--1bit-fg)"
           strokeWidth={2}
         />
         <line
@@ -66,12 +66,12 @@ const Knob: React.FC<KnobProps> = ({ value, onChange, min = 0, max = 1, label })
           y1={cy}
           x2={ix}
           y2={iy}
-          stroke="var(--bit-color0)"
+          stroke="var(--1bit-fg)"
           strokeWidth={2}
           strokeLinecap="square"
         />
       </svg>
-      <span style={{ fontSize: '0.7em', color: 'var(--bit-color0)' }}>{value.toFixed(2)}</span>
+      <span style={{ fontSize: '0.7em', color: 'var(--1bit-fg)' }}>{value.toFixed(2)}</span>
     </div>
   );
 };

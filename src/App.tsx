@@ -34,7 +34,7 @@ function App() {
         <TransportProvider>
           <SynthProvider>
             <AudioEngineConnector />
-            <div className="flex flex-col h-screen overflow-hidden crt">
+            <div className="onebit flex flex-col h-screen overflow-hidden crt">
               <div className="flex flex-1 overflow-hidden">
                 <main className="flex-1 overflow-auto flex justify-center items-start">
                   <motion.div

@@ -1,7 +1,14 @@
 import React from 'react';
 import { useTransport } from '../contexts/TransportContext';
+import { Play, Power } from 'pixelarticons/react';
 import BpmControl from './BpmControl';
 import SwingControl from './SwingControl';
+
+const PauseIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <rect x="5" y="3" width="5" height="18"/><rect x="14" y="3" width="5" height="18"/>
+  </svg>
+);
 
 const TransportBar = () => {
   const { isPlaying, play, pause } = useTransport();
@@ -27,9 +34,9 @@ const TransportBar = () => {
           title={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? (
-            <><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="1" y="1" width="3" height="10"/><rect x="8" y="1" width="3" height="10"/></svg>Pause</>
+            <><PauseIcon />Pause</>
           ) : (
-            <><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 11,6 2,11"/></svg>Play</>
+            <><Play width={16} height={16} />Play</>
           )}
         </button>
         <button
@@ -37,7 +44,7 @@ const TransportBar = () => {
           onClick={handleStop}
           title="Stop"
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="1" y="1" width="10" height="10"/></svg>Stop
+          <Power width={16} height={16} />Stop
         </button>
       </div>
       <BpmControl />

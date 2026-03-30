@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 
-export type Theme = "classic" | "crt-green" | "inverse" | "midnight" | "hacker";
+export type Theme = "amber" | "classic" | "classic-dark" | "crt-green" | "indigo" | "sharp-wizard";
 
 export const THEMES: { id: Theme; label: string; crt: boolean }[] = [
-  { id: "classic", label: "Classic", crt: true },
-  { id: "crt-green", label: "CRT Green", crt: true },
-  { id: "inverse", label: "Inverse", crt: false },
-  { id: "midnight", label: "Midnight", crt: false },
-  { id: "hacker", label: "Hacker", crt: true },
+  { id: "amber", label: "Amber CRT", crt: true },
+  { id: "classic", label: "Classic LCD", crt: false },
+  { id: "classic-dark", label: "Classic Dark", crt: false },
+  { id: "crt-green", label: "Green CRT", crt: true },
+  { id: "indigo", label: "Indigo", crt: false },
+  { id: "sharp-wizard", label: "Sharp Wizard", crt: false },
 ];
 
 interface UIState {
@@ -23,7 +24,7 @@ type UIAction =
   | { type: "SET_SELECTED_TRACK"; track: number | null };
 
 const initialState: UIState = {
-  theme: "classic",
+  theme: "amber",
   sidebarOpen: false,
   selectedTrack: null,
 };

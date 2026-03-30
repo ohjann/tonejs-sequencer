@@ -1,20 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bit-0: var(--bit-color0);
-  --color-bit-1: var(--bit-color1);
+  --color-bit-fg: var(--1bit-fg);
+  --color-bit-bg: var(--1bit-bg);
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }

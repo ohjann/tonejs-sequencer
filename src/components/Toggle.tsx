@@ -17,8 +17,8 @@ const Toggle: React.FC<ToggleProps> = ({ value, onChange, label }) => {
           display: 'inline-block',
           width: 40,
           height: 20,
-          background: value ? 'var(--bit-color0)' : 'var(--bit-color1)',
-          border: '2px solid var(--bit-color0)',
+          background: value ? 'var(--1bit-fg)' : 'var(--1bit-bg)',
+          border: '2px solid var(--1bit-fg)',
           position: 'relative',
           cursor: 'pointer',
           boxSizing: 'border-box',
@@ -36,12 +36,12 @@ const Toggle: React.FC<ToggleProps> = ({ value, onChange, label }) => {
             left: value ? 'calc(100% - 14px)' : 2,
             width: 12,
             height: 12,
-            background: value ? 'var(--bit-color1)' : 'var(--bit-color0)',
+            background: value ? 'var(--1bit-bg)' : 'var(--1bit-fg)',
             transition: 'left 0.1s',
           }}
         />
       </div>
-      {label && <label htmlFor={id} style={{ fontSize: '0.75em', color: 'var(--bit-color0)', cursor: 'pointer' }} onClick={() => onChange(!value)}>{label}</label>}
+      {label && <label htmlFor={id} style={{ fontSize: '0.75em', color: 'var(--1bit-fg)', cursor: 'pointer' }} onClick={() => onChange(!value)}>{label}</label>}
     </div>
   );
 };
