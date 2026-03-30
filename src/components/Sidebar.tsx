@@ -5,7 +5,7 @@ import { useSynth, OscillatorType } from "../contexts/SynthContext";
 import MasterVolume from "./MasterVolume";
 import Knob from "./Knob";
 import Select from "./Select";
-import { SynthPresetSelect } from "./PresetBrowser";
+import { GlobalSynthPresetSelect, SaveSynthPreset } from "./PresetBrowser";
 import ThemeSwitcher from "./ThemeSwitcher";
 import UndoRedo from "./UndoRedo";
 import ExportWav from "./ExportWav";
@@ -19,49 +19,50 @@ const OSC_OPTIONS: { value: OscillatorType; label: string }[] = [
   { value: "triangle8", label: "Tri8" },
 ];
 
-function TrackControls({ trackIndex }: { trackIndex: number }) {
-  const { tracks, setTrackParams } = useSynth();
-  const params = tracks[trackIndex];
+function SynthControls() {
+  const { tracks, setAllTrackParams } = useSynth();
+  const params = tracks[0];
 
   return (
     <div className="flex flex-col gap-2 py-2 border-b" style={{ borderColor: "var(--1bit-fg)" }}>
       <div className="flex items-center justify-between">
         <span className="font-bold" style={{ fontSize: "0.8em" }}>
-          Track {trackIndex + 1}
+          Synth
         </span>
-        <SynthPresetSelect trackIndex={trackIndex} />
       </div>
+      <GlobalSynthPresetSelect />
+      <SaveSynthPreset />
       <Select
         value={params.oscillatorType}
-        onChange={(v) => setTrackParams(trackIndex, { oscillatorType: v as OscillatorType })}
+        onChange={(v) => setAllTrackParams({ oscillatorType: v as OscillatorType })}
         options={OSC_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
         label="Osc"
       />
       <div className="grid grid-cols-4 gap-1">
         <Knob
           value={params.attack}
-          onChange={(v) => setTrackParams(trackIndex, { attack: v })}
+          onChange={(v) => setAllTrackParams({ attack: v })}
           min={0}
           max={2}
           label="A"
         />
         <Knob
           value={params.decay}
-          onChange={(v) => setTrackParams(trackIndex, { decay: v })}
+          onChange={(v) => setAllTrackParams({ decay: v })}
           min={0}
           max={5}
           label="D"
         />
         <Knob
           value={params.sustain}
-          onChange={(v) => setTrackParams(trackIndex, { sustain: v })}
+          onChange={(v) => setAllTrackParams({ sustain: v })}
           min={0}
           max={1}
           label="S"
         />
         <Knob
           value={params.release}
-          onChange={(v) => setTrackParams(trackIndex, { release: v })}
+          onChange={(v) => setAllTrackParams({ release: v })}
           min={0}
           max={5}
           label="R"
@@ -69,7 +70,7 @@ function TrackControls({ trackIndex }: { trackIndex: number }) {
       </div>
       <Knob
         value={params.filterFrequency}
-        onChange={(v) => setTrackParams(trackIndex, { filterFrequency: v })}
+        onChange={(v) => setAllTrackParams({ filterFrequency: v })}
         min={20}
         max={20000}
         label="Filter"
@@ -78,7 +79,7 @@ function TrackControls({ trackIndex }: { trackIndex: number }) {
   );
 }
 
-function SidebarContent({ trackIndex }: { trackIndex: number }) {
+function SidebarContent() {
   return (
     <div className="flex flex-col gap-2 p-2 overflow-y-auto flex-1">
       <div className="flex flex-col gap-2 pb-2 border-b" style={{ borderColor: "var(--1bit-fg)" }}>
@@ -90,7 +91,7 @@ function SidebarContent({ trackIndex }: { trackIndex: number }) {
         </div>
       </div>
       <MasterVolume />
-      <TrackControls trackIndex={trackIndex} />
+      <SynthControls />
       <div className="mt-auto pt-2 border-t" style={{ borderColor: "var(--1bit-fg)", opacity: 0.6, fontSize: "0.7em" }}>
         UI theme by{" "}
         <a
@@ -118,8 +119,7 @@ function SidebarContent({ trackIndex }: { trackIndex: number }) {
 
 export default function Sidebar() {
   const { state, toggleSidebar, setSidebar } = useUI();
-  const { sidebarOpen, selectedTrack } = state;
-  const trackIndex = selectedTrack ?? 0;
+  const { sidebarOpen } = state;
 
   return (
     <>
@@ -148,7 +148,7 @@ export default function Sidebar() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
           >
-            <SidebarContent trackIndex={trackIndex} />
+            <SidebarContent />
           </motion.div>
         )}
       </aside>
@@ -188,7 +188,7 @@ export default function Sidebar() {
                 Close
               </button>
             </div>
-            <SidebarContent trackIndex={trackIndex} />
+            <SidebarContent />
           </motion.div>
         )}
       </AnimatePresence>

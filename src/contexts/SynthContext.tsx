@@ -39,6 +39,7 @@ interface SynthState {
 
 type SynthAction =
   | { type: 'SET_TRACK_PARAMS'; payload: { row: number; params: Partial<TrackSynthParams> } }
+  | { type: 'SET_ALL_TRACK_PARAMS'; payload: Partial<TrackSynthParams> }
   | { type: 'TOGGLE_MUTE'; payload: number }
   | { type: 'TOGGLE_SOLO'; payload: number }
   | { type: 'SET_MASTER_VOLUME'; payload: number };
@@ -55,6 +56,10 @@ function synthReducer(state: SynthState, action: SynthAction): SynthState {
       const tracks = state.tracks.map((t, i) =>
         i === row ? { ...t, ...params } : t
       );
+      return { ...state, tracks };
+    }
+    case 'SET_ALL_TRACK_PARAMS': {
+      const tracks = state.tracks.map((t) => ({ ...t, ...action.payload }));
       return { ...state, tracks };
     }
     case 'TOGGLE_MUTE': {
@@ -82,6 +87,7 @@ interface SynthContextValue {
   tracks: TrackSynthParams[];
   masterVolume: number;
   setTrackParams: (row: number, params: Partial<TrackSynthParams>) => void;
+  setAllTrackParams: (params: Partial<TrackSynthParams>) => void;
   toggleMute: (row: number) => void;
   toggleSolo: (row: number) => void;
   setMasterVolume: (vol: number) => void;
@@ -94,12 +100,14 @@ export function SynthProvider({ children }: { children: React.ReactNode }) {
 
   const setTrackParams = (row: number, params: Partial<TrackSynthParams>) =>
     dispatch({ type: 'SET_TRACK_PARAMS', payload: { row, params } });
+  const setAllTrackParams = (params: Partial<TrackSynthParams>) =>
+    dispatch({ type: 'SET_ALL_TRACK_PARAMS', payload: params });
   const toggleMute = (row: number) => dispatch({ type: 'TOGGLE_MUTE', payload: row });
   const toggleSolo = (row: number) => dispatch({ type: 'TOGGLE_SOLO', payload: row });
   const setMasterVolume = (vol: number) => dispatch({ type: 'SET_MASTER_VOLUME', payload: vol });
 
   return (
-    <SynthContext.Provider value={{ tracks: state.tracks, masterVolume: state.masterVolume, setTrackParams, toggleMute, toggleSolo, setMasterVolume }}>
+    <SynthContext.Provider value={{ tracks: state.tracks, masterVolume: state.masterVolume, setTrackParams, setAllTrackParams, toggleMute, toggleSolo, setMasterVolume }}>
       {children}
     </SynthContext.Provider>
   );

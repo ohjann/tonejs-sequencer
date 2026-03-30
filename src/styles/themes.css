@@ -34,45 +34,32 @@
   --1bit-fg: #739380;
 }
 
-/* CRT effects -- only applied when data-crt="true" */
-[data-crt="true"] .crt:after {
+/* ==========================================================================
+   CRT Effects — scanlines only, toggled via data-crt on <html>
+   ========================================================================== */
+
+[data-crt="true"] .crt::after {
   content: '';
   display: block;
   position: fixed;
-  top: 0;
-  height: 100vh;
-  width: 100vw;
-  background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,1), #ffffff, #ffffff);
-  background-size: 100% 4px;
-  opacity: 0.1;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
   pointer-events: none;
-  animation: scanlines infinite 155s linear;
+  z-index: 9999;
+  animation: scanlines 155s linear infinite;
 }
 
-[data-crt="false"] .crt:after {
+[data-crt="false"] .crt::after {
   display: none;
-}
-
-/* Text flicker -- only when CRT is on */
-[data-crt="true"] body {
-  filter: blur(.4px);
-  animation-duration: 0.01s;
-  animation-name: textflicker;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-
-[data-crt="false"] body {
-  filter: none;
-  animation: none;
 }
 
 @keyframes scanlines {
   from { background-position: 0 0; }
   to { background-position: 0 -100vh; }
-}
-
-@keyframes textflicker {
-  from { text-shadow: 1px 0 0 #ea36af, -2px 0 0 #75fa69; }
-  to { text-shadow: 2px 0.5px 2px #ea36af, -1px -0.5px 2px #75fa69; }
 }
