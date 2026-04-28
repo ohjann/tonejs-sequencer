@@ -1,0 +1,65 @@
+/* Theme: Amber CRT (default, matches 1bit-ui demo) */
+[data-theme="amber"] {
+  --1bit-bg: #2A1A00;
+  --1bit-fg: #FFB000;
+}
+
+/* Theme: Classic LCD */
+[data-theme="classic"] {
+  --1bit-bg: #A8B858;
+  --1bit-fg: #000000;
+}
+
+/* Theme: Classic LCD Dark */
+[data-theme="classic-dark"] {
+  --1bit-bg: #000000;
+  --1bit-fg: #A8B858;
+}
+
+/* Theme: Green CRT */
+[data-theme="crt-green"] {
+  --1bit-bg: #0A3309;
+  --1bit-fg: #33FF33;
+}
+
+/* Theme: Indigo */
+[data-theme="indigo"] {
+  --1bit-bg: #0A1A2A;
+  --1bit-fg: #58AAE5;
+}
+
+/* Theme: Sharp Wizard */
+[data-theme="sharp-wizard"] {
+  --1bit-bg: #000000;
+  --1bit-fg: #739380;
+}
+
+/* ==========================================================================
+   CRT Effects — scanlines only, toggled via data-crt on <html>
+   ========================================================================== */
+
+[data-crt="true"] .crt::after {
+  content: '';
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanlines 155s linear infinite;
+}
+
+[data-crt="false"] .crt::after {
+  display: none;
+}
+
+@keyframes scanlines {
+  from { background-position: 0 0; }
+  to { background-position: 0 -100vh; }
+}

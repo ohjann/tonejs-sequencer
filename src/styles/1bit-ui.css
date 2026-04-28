@@ -1,536 +1,650 @@
-.bit-auto,
-.bit-root {
-  --bit-color0: #3e232c;
-  --bit-color1: #edf6d6;
-  --bit-button-padding-horizontal: 1rem;
-  --bit-button-padding-vertical: 0.5rem;
-  --bit-select-padding-horizontal: 1rem;
-  --bit-select-padding-vertical: 0.5rem;
-  --bit-input-padding-horizontal: 0.5rem;
-  --bit-input-padding-vertical: 0.5rem;
-  --bit-table-padding-horizontal: 1rem;
-  --bit-table-padding-vertical: 0.5rem;
-  --bit-card-padding-horizontal: 1rem;
-  --bit-card-padding-vertical: 1rem;
-  --bit-box-padding-horizontal: 2px;
-  --bit-box-padding-vertical: 2px;
-  --bit-fieldset-padding-horizontal: 0.5rem;
-  --bit-fieldset-padding-vertical: 0.5rem;
-  --bit-legend-padding-horizontal: 0.5rem;
-  --bit-legend-padding-vertical: 0rem;
-  --bit-pre-padding-horizontal: 1rem;
-  --bit-pre-padding-vertical: 1rem;
-  --bit-code-padding-horizontal: 0.2em;
-  --bit-code-padding-vertical: 0.1em;
-  --bit-radiocheckbox-size: 1.5em;
-  --bit-border-width: 2px;
-  --bit-underline-thickness: 2px;
-  --bit-border-radius: 0px;
-  --bit-select-handle-width: 1em;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
+/* ==========================================================================
+   1bit-ui by Joe Contini (https://github.com/jcontini/1bit-ui)
+   Extracted and adapted for React
+   ========================================================================== */
+
+/* --- Font --- */
+@font-face {
+  font-family: 'Tamzen';
+  src: url('/fonts/Tamzen.ttf') format('truetype');
 }
 
-/* Checkbox / Radio Button Field Container */
+/* --- Design Tokens --- */
+:root {
+  --1bit-bg: #2A1A00;
+  --1bit-fg: #FFB000;
+  --1bit-font: 'Tamzen', 'SF Mono', 'Monaco', monospace;
+  --1bit-font-size: 16px;
+  --1bit-line-height: 1.4;
+  --1bit-spacing-xs: 2px;
+  --1bit-spacing-sm: 4px;
+  --1bit-spacing-md: 6px;
+  --1bit-spacing-lg: 8px;
+  --1bit-border-width: 1px;
+  --1bit-border-thick: 2px;
+  --1bit-corner-cut-sm: 4px;
+  --1bit-corner-cut-md: 8px;
+  --1bit-corner-cut-lg: 12px;
 
-.bit-field {
-  box-sizing: border-box;
-  display: grid;
-  grid-gap: calc(2 * var(--bit-border-width));
-  grid-template-columns: min-content 1fr;
-  align-items: center;
+  /* Dither patterns */
+  --1bit-dither-25: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%23888869'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23000000'/%3E%3C/svg%3E");
+  --1bit-dither-50: url("data:image/svg+xml,%3Csvg width='2' height='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' fill='%23888869'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23000000'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23000000'/%3E%3C/svg%3E");
+  --1bit-dither-75: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%23000000'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23888869'/%3E%3C/svg%3E");
+  --1bit-dither-hlines: url("data:image/svg+xml,%3Csvg width='1' height='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23000000'/%3E%3Crect y='1' width='1' height='1' fill='%23888869'/%3E%3C/svg%3E");
+  --1bit-dither-vlines: url("data:image/svg+xml,%3Csvg width='2' height='1' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23000000'/%3E%3Crect x='1' width='1' height='1' fill='%23888869'/%3E%3C/svg%3E");
+  --1bit-dither-diag: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%23888869'/%3E%3Cpath d='M0,0 L1,0 L0,1 Z M3,0 L4,0 L4,1 L1,4 L0,4 L0,3 Z M4,3 L4,4 L3,4 Z' fill='%23000000'/%3E%3C/svg%3E");
+  --1bit-dither-bayer: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%23888869'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23000000'/%3E%3Crect x='2' y='0' width='1' height='1' fill='%23000000'/%3E%3Crect x='3' y='1' width='1' height='1' fill='%23000000'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23000000'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23000000'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23000000'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23000000'/%3E%3C/svg%3E");
+  --1bit-dither-cross: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='4' fill='%23888869'/%3E%3Cline x1='0' y1='0' x2='4' y2='4' stroke='%23000000' stroke-width='1'/%3E%3Cline x1='4' y1='0' x2='0' y2='4' stroke='%23000000' stroke-width='1'/%3E%3C/svg%3E");
 }
 
-.bit-field > .bit-radio + *,
-.bit-field > .bit-checkbox + * {
-  user-select: none;
+/* --- Base .onebit container --- */
+.onebit {
+  font-family: var(--1bit-font);
+  font-size: var(--1bit-font-size);
+  line-height: var(--1bit-line-height);
+  color: var(--1bit-fg);
+  background-color: var(--1bit-bg);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
-.bit-field > .bit-radio:disabled + *,
-.bit-field > .bit-checkbox:disabled + * {
-  opacity: 0.5;
+.onebit button,
+.onebit input,
+.onebit select,
+.onebit textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
-.bit-auto label {
-  display: block;
-}
+/* --- Dither utilities --- */
+.dither-25 { background-image: var(--1bit-dither-25); }
+.dither-50 { background-image: var(--1bit-dither-50); }
+.dither-75 { background-image: var(--1bit-dither-75); }
+.dither-hlines { background-image: var(--1bit-dither-hlines); }
+.dither-vlines { background-image: var(--1bit-dither-vlines); }
+.dither-diag { background-image: var(--1bit-dither-diag); }
+.dither-bayer { background-image: var(--1bit-dither-bayer); }
+.dither-cross { background-image: var(--1bit-dither-cross); }
 
-.bit-auto label > input[type="radio"] + *,
-.bit-auto label > input[type="checkbox"] + *,
-.bit-auto input[type="radio"] + label,
-.bit-auto input[type="checkbox"] + label {
-  padding: calc(2 * var(--bit-border-width));
-  display: inline-block;
-  align-self: start;
-}
-
-.bit-auto label > input[type="radio"] + *,
-.bit-auto label > input[type="checkbox"] + * {
-  padding-left: calc(4 * var(--bit-border-width));
-}
-
-/* Checkbox / Radio Button */
-
-.bit-auto input[type="checkbox"],
-.bit-checkbox {
-  border-radius: var(--bit-border-radius);
-}
-
-.bit-auto input[type="radio"],
-.bit-radio {
-  border-radius: 9999px;
-}
-
-.bit-auto input[type="checkbox"],
-.bit-auto input[type="radio"],
-.bit-checkbox,
-.bit-radio {
-  align-self: start;
-  vertical-align: top;
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  font: inherit;
-  width: var(--bit-radiocheckbox-size);
-  height: var(--bit-radiocheckbox-size);
-  margin: calc(2 * var(--bit-border-width));
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  border: var(--bit-border-width) solid var(--bit-color0);
-}
-
-.bit-auto input[type="checkbox"]:hover,
-.bit-auto input[type="radio"]:hover,
-.bit-checkbox:hover,
-.bit-radio:hover {
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0);
-}
-
-.bit-auto input[type="checkbox"]:focus,
-.bit-auto input[type="radio"]:focus,
-.bit-checkbox:focus,
-.bit-radio:focus {
-  outline: 0;
-  box-shadow: 0 0 0 var(--bit-border-width) var(--bit-color1),
-    0 0 0 calc(2 * var(--bit-border-width)) var(--bit-color0),
-    inset 0 0 0 var(--bit-border-width) var(--bit-color1);
-}
-
-.bit-auto input[type="checkbox"]:checked,
-.bit-auto input[type="radio"]:checked,
-.bit-checkbox:checked,
-.bit-radio:checked {
-  background: var(--bit-color0);
-  box-shadow: inset 0 0 0 calc(2 * var(--bit-border-width)) var(--bit-color1);
-}
-
-.bit-auto input[type="checkbox"]:checked:hover,
-.bit-auto input[type="radio"]:checked:hover,
-.bit-checkbox:checked:hover,
-.bit-radio:checked:hover {
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0),
-    inset 0 0 0 calc(2 * var(--bit-border-width)) var(--bit-color1);
-}
-
-.bit-auto input[type="checkbox"]:checked:focus,
-.bit-auto input[type="radio"]:checked:focus,
-.bit-checkbox:checked:focus,
-.bit-radio:checked:focus {
-  box-shadow: 0 0 0 var(--bit-border-width) var(--bit-color1),
-    0 0 0 calc(2 * var(--bit-border-width)) var(--bit-color0),
-    inset 0 0 0 calc(2 * var(--bit-border-width)) var(--bit-color1);
-}
-
-.bit-auto input[type="checkbox"]:disabled:hover,
-.bit-auto input[type="radio"]:disabled:hover,
-.bit-auto input[type="checkbox"]:disabled,
-.bit-auto input[type="radio"]:disabled,
-.bit-checkbox:disabled:hover,
-.bit-radio:disabled:hover,
-.bit-checkbox:disabled,
-.bit-radio:disabled {
-  opacity: 0.5;
-  border-style: dotted;
-  box-shadow: none;
-}
-
-/* Table */
-
-.bit-auto table,
-.bit-table {
-  box-sizing: border-box;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  border-collapse: collapse;
-}
-
-.bit-auto table th,
-.bit-table th {
-  padding: var(--bit-table-padding-vertical) var(--bit-table-padding-horizontal);
-  text-align: left;
-}
-
-.bit-auto table tbody tr,
-.bit-table tbody tr {
-  border-top: calc(0.5 * var(--bit-border-width)) solid var(--bit-color0);
-}
-
-.bit-auto table th,
-.bit-auto table td,
-.bit-table th,
-.bit-table td {
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  padding: var(--bit-table-padding-vertical) var(--bit-table-padding-horizontal);
-}
-
-.bit-auto table thead,
-.bit-table thead {
-  border-top: 0;
-  border-bottom: var(--bit-border-width) solid var(--bit-color0);
-}
-
-.bit-auto table tfoot,
-.bit-table tfoot {
-  border-top: var(--bit-border-width) solid var(--bit-color0);
-  border-bottom: 0;
-}
-
-/* Button */
-
-.bit-auto button,
-.bit-auto input[type="button"],
-.bit-auto input[type="submit"],
-.bit-auto input[type="color"],
-.bit-button {
-  box-sizing: border-box;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  padding: var(--bit-button-padding-vertical)
-    var(--bit-button-padding-horizontal);
-  font: inherit;
-  border: var(--bit-border-width) solid var(--bit-color0);
-  box-shadow: inset 0 calc(-1 * var(--bit-border-width)) 0 var(--bit-color0);
-  border-radius: var(--bit-border-radius);
-}
-
-.bit-auto button:hover,
-.bit-auto input[type="button"]:hover,
-.bit-auto input[type="submit"]:hover,
-.bit-auto input[type="color"]:hover,
-.bit-button:hover {
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0);
-}
-
-.bit-auto button:active,
-.bit-auto input[type="button"]:active,
-.bit-auto input[type="submit"]:active,
-.bit-auto input[type="color"]:active,
-.bit-button:active {
-  transform: translateY(var(--bit-border-width));
-}
-
-.bit-auto button:focus,
-.bit-auto input[type="button"]:focus,
-.bit-auto input[type="submit"]:focus,
-.bit-auto input[type="color"]:focus,
-.bit-button:focus {
-  outline: none;
-  border-color: var(--bit-color1);
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0),
-    0 0 0 var(--bit-border-width) var(--bit-color0),
-    inset 0 calc(-2 * var(--bit-border-width)) 0 var(--bit-color0);
-}
-
-.bit-auto button:disabled,
-.bit-auto input[type="button"]:disabled,
-.bit-auto input[type="submit"]:disabled,
-.bit-auto input[type="color"]:disabled,
-.bit-button:disabled {
-  transform: none;
-  opacity: 0.5;
-  box-shadow: none;
-  border-color: var(--bit-color0);
-  border-style: dotted;
-}
-
-/* Select */
-
-.bit-auto select,
-.bit-select {
-  box-sizing: border-box;
-  -webkit-appearance: none;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  padding: var(--bit-select-padding-vertical)
-    var(--bit-select-padding-horizontal);
-  padding-right: calc(
-    var(--bit-select-padding-horizontal) + var(--bit-select-handle-width)
+/* --- Pixel corners --- */
+.pixel-corners {
+  --corner-cut: var(--1bit-corner-cut-md);
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    calc(100% - var(--corner-cut)) 0,
+    100% var(--corner-cut),
+    100% calc(100% - var(--corner-cut)),
+    calc(100% - var(--corner-cut)) 100%,
+    var(--corner-cut) 100%,
+    0 calc(100% - var(--corner-cut)),
+    0 var(--corner-cut)
   );
-  font: inherit;
-  border: var(--bit-border-width) solid var(--bit-color0);
-  border-radius: var(--bit-border-radius);
-  box-shadow: inset 0 calc(-1 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset 0 var(--bit-border-width) 0 0 var(--bit-color1),
-    inset calc(-1 * var(--bit-border-width)) 0 0 0 var(--bit-color1),
-    inset calc(-1 * var(--bit-select-handle-width)) 0 0 0 var(--bit-color0),
-    inset
-      calc(-1 * var(--bit-select-handle-width) + -1 * var(--bit-border-width)) 0
-      0 0 var(--bit-color1);
 }
+.pixel-corners-sm { --corner-cut: var(--1bit-corner-cut-sm); }
+.pixel-corners-md { --corner-cut: var(--1bit-corner-cut-md); }
+.pixel-corners-lg { --corner-cut: var(--1bit-corner-cut-lg); }
 
-.bit-auto select:hover,
-.bit-select:hover {
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0),
-    inset 0 calc(-2 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset 0 calc(2 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset calc(-2 * var(--bit-border-width)) 0 0 0 var(--bit-color1),
-    inset calc(-1 * var(--bit-select-handle-width)) 0 0 0 var(--bit-color0),
-    inset
-      calc(-1 * var(--bit-select-handle-width) + -1 * var(--bit-border-width)) 0
-      0 0 var(--bit-color1);
+/* ==========================================================================
+   Components
+   ========================================================================== */
+
+/* --- Button --- */
+.bit-button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  color: var(--1bit-fg);
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  padding: 4px 8px;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
-
-.bit-auto select:focus,
-.bit-select:focus {
-  outline: none;
-  border-color: var(--bit-color1);
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0),
-    inset 0 calc(-2 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset 0 calc(2 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset calc(-2 * var(--bit-border-width)) 0 0 0 var(--bit-color1),
-    inset calc(-1 * var(--bit-select-handle-width)) 0 0 0 var(--bit-color0),
-    inset
-      calc(-1 * var(--bit-select-handle-width) + -1 * var(--bit-border-width)) 0
-      0 0 var(--bit-color1),
-    0 0 0 var(--bit-border-width) var(--bit-color0);
+.bit-button:hover:not(:disabled) {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
 }
-
-.bit-auto select:-moz-focusring,
-.bit-select:-moz-focusring {
-  color: transparent;
-  text-shadow: 0 0 0 var(--bit-color0);
+.bit-button:active:not(:disabled) {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
 }
-
-.bit-auto select:disabled,
-.bit-select:disabled {
+.bit-button:disabled {
   opacity: 0.5;
-  border-color: var(--bit-color0);
-  border-style: dotted;
-  box-shadow: inset 0 calc(-1 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset 0 calc(1 * var(--bit-border-width)) 0 0 var(--bit-color1),
-    inset calc(-1 * var(--bit-border-width)) 0 0 0 var(--bit-color1),
-    inset calc(-1 * var(--bit-select-handle-width)) 0 0 0 var(--bit-color0),
-    inset
-      calc(-1 * var(--bit-select-handle-width) + -1 * var(--bit-border-width)) 0
-      0 0 var(--bit-color1);
+  cursor: not-allowed;
+}
+.bit-button--small {
+  padding: 0 4px;
+  font-size: inherit;
+}
+.bit-button--icon {
+  padding: 0 2px;
+  min-width: 28px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Link */
-
-.bit-auto a,
-.bit-link {
-  color: var(--bit-color0);
-  text-decoration: underline;
-  border-radius: var(--bit-border-radius);
-  text-decoration-thickness: var(--bit-underline-thickness);
-}
-
-.bit-auto a:hover,
-.bit-link:hover {
-  border-radius: var(--bit-border-radius);
-  background: var(--bit-color1);
-  text-decoration: none;
-  outline: var(--bit-border-width) solid var(--bit-color0);
-  outline-offset: var(--bit-border-width);
-}
-
-.bit-auto a:focus,
-.bit-link:focus {
-  border-radius: var(--bit-border-radius);
-  background: var(--bit-color0);
-  color: var(--bit-color1);
-  text-decoration: none;
-  outline: none;
-  outline: calc(3 * var(--bit-border-width)) double var(--bit-color0);
-  outline-offset: 0;
-}
-
-/* Input / Text Area */
-
-.bit-auto input[type="tel"],
-.bit-auto input[type="url"],
-.bit-auto input[type="text"],
-.bit-auto input[type="email"],
-.bit-auto input[type="search"],
-.bit-auto input[type="number"],
-.bit-auto input[type="password"],
-.bit-auto textarea,
+/* --- Input --- */
 .bit-input {
-  box-sizing: border-box;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  font: inherit;
-  padding: var(--bit-input-padding-vertical) var(--bit-input-padding-horizontal);
-  border: var(--bit-border-width) solid var(--bit-color0);
-  box-shadow: inset 0 var(--bit-border-width) 0 var(--bit-color0);
-  border-radius: var(--bit-border-radius);
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--1bit-fg);
+  padding: 4px 8px;
+  line-height: 1;
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
 }
-
-.bit-auto input[type="tel"]:hover,
-.bit-auto input[type="url"]:hover,
-.bit-auto input[type="text"]:hover,
-.bit-auto input[type="email"]:hover,
-.bit-auto input[type="search"]:hover,
-.bit-auto input[type="number"]:hover,
-.bit-auto input[type="password"]:hover,
-.bit-auto textarea:hover,
-.bit-input:hover {
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0);
-}
-
-.bit-auto input[type="tel"]:focus,
-.bit-auto input[type="url"]:focus,
-.bit-auto input[type="text"]:focus,
-.bit-auto input[type="email"]:focus,
-.bit-auto input[type="search"]:focus,
-.bit-auto input[type="number"]:focus,
-.bit-auto input[type="password"]:focus,
-.bit-auto textarea:focus,
 .bit-input:focus {
   outline: none;
-  border-color: var(--bit-color1);
-  box-shadow: inset 0 0 0 var(--bit-border-width) var(--bit-color0),
-    0 0 0 var(--bit-border-width) var(--bit-color0),
-    inset 0 calc(2 * var(--bit-border-width)) 0 var(--bit-color0);
 }
-
-.bit-auto input[type="tel"]:disabled,
-.bit-auto input[type="url"]:disabled,
-.bit-auto input[type="text"]:disabled,
-.bit-auto input[type="email"]:disabled,
-.bit-auto input[type="search"]:disabled,
-.bit-auto input[type="number"]:disabled,
-.bit-auto input[type="password"]:disabled,
-.bit-auto textarea:disabled,
 .bit-input:disabled {
   opacity: 0.5;
-  box-shadow: none;
-  border-color: var(--bit-color0);
-  border-style: dotted;
+  cursor: not-allowed;
 }
-
-.bit-auto input[type="tel"]::placeholder,
-.bit-auto input[type="url"]::placeholder,
-.bit-auto input[type="text"]::placeholder,
-.bit-auto input[type="email"]::placeholder,
-.bit-auto input[type="search"]::placeholder,
-.bit-auto input[type="number"]::placeholder,
-.bit-auto input[type="password"]::placeholder,
-.bit-auto textarea::placeholder,
 .bit-input::placeholder {
-  color: var(--bit-color0);
+  color: var(--1bit-fg);
   opacity: 0.5;
 }
 
-.bit-auto input[type="tel"]::selection,
-.bit-auto input[type="url"]::selection,
-.bit-auto input[type="text"]::selection,
-.bit-auto input[type="email"]::selection,
-.bit-auto input[type="search"]::selection,
-.bit-auto input[type="number"]::selection,
-.bit-auto input[type="password"]::selection,
-.bit-auto textarea::selection,
-.bit-input::selection {
-  background: var(--bit-color0);
-  color: var(--bit-color1);
+/* --- Dropdown / Select --- */
+.bit-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.bit-dropdown__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--1bit-spacing-sm);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  color: var(--1bit-fg);
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  padding: 4px 8px;
+  cursor: pointer;
+  min-width: 80px;
+}
+.bit-dropdown__trigger:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--1bit-fg);
+}
+.bit-dropdown__trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bit-dropdown__value {
+  flex: 1;
+  text-align: left;
+}
+.bit-dropdown__arrow {
+  font-size: 10px;
+  color: var(--1bit-fg);
 }
 
-/* Fieldset and legend */
-
-.bit-auto fieldset,
-.bit-fieldset {
-  border: var(--bit-border-width) solid var(--bit-color0);
-  padding: var(--bit-fieldset-padding-vertical)
-    var(--bit-fieldset-padding-horizontal);
-  margin: 0;
-  border-radius: var(--bit-border-radius);
+/* Native select fallback (used throughout app) */
+.bit-select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  color: var(--1bit-fg);
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  padding: 4px 8px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.bit-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--1bit-fg);
+}
+.bit-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.bit-auto legend,
-.bit-legend {
-  border: var(--bit-border-width) solid var(--bit-color0);
-  padding: var(--bit-legend-padding-vertical)
-    var(--bit-legend-padding-horizontal);
-  margin: 0;
-  border-radius: var(--bit-border-radius);
+/* --- Panel --- */
+.bit-panel {
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  font-family: inherit;
+  font-size: inherit;
+}
+.bit-panel__title {
+  padding: var(--1bit-spacing-xs) var(--1bit-spacing-sm);
+  border-bottom: var(--1bit-border-width) solid var(--1bit-fg);
+  font-weight: bold;
+}
+.bit-panel__content {
+  padding: var(--1bit-spacing-sm);
 }
 
-/* Firefox nonsense */
-
-.bit-auto ::-moz-focus-inner,
-.bit-checkbox::-moz-focus-inner,
-.bit-radio::-moz-focus-inner,
-.bit-select::-moz-focus-inner,
-.bit-button::-moz-focus-inner,
-.bit-input::-moz-focus-inner {
-  border: 0;
-}
-
-/* Miscellaneous */
-
+/* --- Card (main container) --- */
 .bit-card {
   box-sizing: border-box;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  border: calc(3 * var(--bit-border-width)) double var(--bit-color0);
-  padding: var(--bit-card-padding-vertical) var(--bit-card-padding-horizontal);
-  box-shadow: inset 0 var(--bit-border-width) 0 0 var(--bit-color0),
-    0 var(--bit-border-width) 0 0 var(--bit-color0);
-  border-radius: var(--bit-border-radius);
+  background-color: var(--1bit-bg);
+  color: var(--1bit-fg);
+  border: var(--1bit-border-thick) solid var(--1bit-fg);
+  padding: var(--1bit-spacing-lg);
 }
 
-.bit-box {
-  box-sizing: border-box;
-  background: var(--bit-color1);
-  color: var(--bit-color0);
-  border: var(--bit-border-width) solid var(--bit-color0);
-  padding: var(--bit-box-padding-vertical) var(--bit-box-padding-horizontal);
-  border-radius: var(--bit-border-radius);
+/* --- TitleBar --- */
+.bit-titlebar {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
+  padding: var(--1bit-spacing-xs) var(--1bit-spacing-sm);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bit-titlebar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--1bit-spacing-xs);
+}
+.bit-titlebar__right {
+  font-weight: normal;
 }
 
-.bit-auto,
-.bit-scrollbar {
-  scrollbar-color: var(--bit-color0) var(--bit-color1);
+/* --- Toggle --- */
+.bit-toggle {
+  display: inline-flex;
+  font-family: inherit;
+  font-size: inherit;
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  background: var(--1bit-bg);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+.bit-toggle--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bit-toggle__label {
+  padding: 2px 8px;
+  line-height: 1;
+  color: var(--1bit-fg);
+  background: var(--1bit-bg);
+  transition: background-color 0.1s, color 0.1s;
+}
+.bit-toggle__label--active {
+  background: var(--1bit-fg);
+  color: var(--1bit-bg);
 }
 
-.bit-svg {
-  fill: var(--bit-color0);
+/* --- Slider --- */
+.bit-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: inherit;
+}
+.bit-slider--disabled {
+  opacity: 0.5;
+}
+.bit-slider__label {
+  white-space: nowrap;
+}
+.bit-slider__track-container {
+  position: relative;
+  flex: 1;
+  min-width: 80px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+}
+.bit-slider__track {
+  position: absolute;
+  width: 100%;
+  height: 8px;
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  pointer-events: none;
+}
+.bit-slider__fill {
+  height: 100%;
+  background-color: var(--1bit-fg);
+}
+.bit-slider__input {
+  position: relative;
+  width: 100%;
+  height: 16px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.bit-slider__input:focus {
+  outline: none;
+}
+.bit-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 16px;
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  cursor: pointer;
+}
+.bit-slider__input::-webkit-slider-thumb:hover {
+  background-color: var(--1bit-fg);
+}
+.bit-slider__input::-moz-range-thumb {
+  width: 12px;
+  height: 16px;
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  border-radius: 0;
+  cursor: pointer;
+}
+.bit-slider__input::-moz-range-thumb:hover {
+  background-color: var(--1bit-fg);
+}
+.bit-slider__input::-moz-range-track {
+  background: transparent;
+}
+.bit-slider__value {
+  min-width: 24px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.bit-auto :not(pre) > code,
-.bit-auto kbd,
-.bit-auto samp,
-.bit-code {
-  background: var(--bit-color0);
-  color: var(--bit-color1);
-  padding: var(--bit-code-padding-vertical) var(--bit-code-padding-horizontal);
-  border-radius: var(--bit-border-radius);
+/* --- ProgressBar --- */
+.bit-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: inherit;
+}
+.bit-progress__label {
+  white-space: nowrap;
+}
+.bit-progress__track {
+  width: 150px;
+  height: 20px;
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+}
+.bit-progress__fill {
+  height: 100%;
+  background-color: var(--1bit-fg);
 }
 
-.bit-auto hr,
-.bit-hr {
-  box-sizing: border-box;
-  border: 0;
-  border-top: var(--bit-border-width) dotted var(--bit-color0);
+/* --- Tabs --- */
+.bit-tabs {
+  display: inline-flex;
+  font-family: inherit;
+  font-size: inherit;
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+}
+.bit-tabs__tab {
+  padding: 4px 8px;
+  background-color: var(--1bit-bg);
+  border: none;
+  border-right: var(--1bit-border-width) solid var(--1bit-fg);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  color: var(--1bit-fg);
+  display: inline-flex;
+  align-items: center;
+}
+.bit-tabs__tab--last {
+  border-right: none;
+}
+.bit-tabs__tab:hover:not(.bit-tabs__tab--active) {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
+}
+.bit-tabs__tab--active {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
 }
 
-.bit-auto pre,
-.bit-pre {
-  box-sizing: border-box;
-  background: var(--bit-color0);
-  color: var(--bit-color1);
-  scrollbar-color: var(--bit-color1) var(--bit-color0);
-  overflow-x: auto;
-  padding: var(--bit-pre-padding-vertical) var(--bit-pre-padding-horizontal);
-  border-radius: var(--bit-border-radius);
+/* --- List --- */
+.bit-list {
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  font-size: inherit;
+}
+.bit-list__item {
+  padding: 4px 8px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  color: var(--1bit-fg);
+}
+.bit-list__item--divider {
+  position: relative;
+}
+.bit-list__item--divider::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--1bit-fg) 0px,
+    var(--1bit-fg) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+.bit-list__item:hover:not(.bit-list__item--selected) {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
+}
+.bit-list__item--selected {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
+}
+
+/* --- Modal --- */
+.bit-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+.bit-modal__border {
+  --corner-cut: 3px;
+  background-color: var(--1bit-fg);
+  padding: var(--1bit-border-thick, 2px);
+  min-width: 200px;
+  max-width: 90vw;
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    calc(100% - var(--corner-cut)) 0,
+    100% var(--corner-cut),
+    100% calc(100% - var(--corner-cut)),
+    calc(100% - var(--corner-cut)) 100%,
+    var(--corner-cut) 100%,
+    0 calc(100% - var(--corner-cut)),
+    0 var(--corner-cut)
+  );
+}
+.bit-modal {
+  --corner-cut: 2px;
+  background-color: var(--1bit-bg);
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    calc(100% - var(--corner-cut)) 0,
+    100% var(--corner-cut),
+    100% calc(100% - var(--corner-cut)),
+    calc(100% - var(--corner-cut)) 100%,
+    var(--corner-cut) 100%,
+    0 calc(100% - var(--corner-cut)),
+    0 var(--corner-cut)
+  );
+}
+.bit-modal__titlebar {
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
+  padding: var(--1bit-spacing-xs) var(--1bit-spacing-md);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--1bit-spacing-sm);
+}
+.bit-modal__content {
+  padding: var(--1bit-spacing-md);
+  font-family: inherit;
+  font-size: inherit;
+  background-color: var(--1bit-bg);
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  margin: var(--1bit-spacing-sm);
+}
+.bit-modal__footer {
+  padding: var(--1bit-spacing-sm) var(--1bit-spacing-md);
+  display: flex;
+  gap: var(--1bit-spacing-sm);
+  justify-content: flex-end;
+}
+
+/* --- Checkbox --- */
+.bit-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+.bit-checkbox--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bit-checkbox__box {
+  width: 1em;
+  height: 1em;
+  border: 1px solid var(--1bit-fg);
+  background-color: var(--1bit-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* --- Radio --- */
+.bit-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+.bit-radio--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bit-radio__circle {
+  width: 1em;
+  height: 1em;
+  border: 1px solid var(--1bit-fg);
+  border-radius: 50%;
+  background-color: var(--1bit-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.bit-radio__dot {
+  width: 0.5em;
+  height: 0.5em;
+  background-color: var(--1bit-fg);
+  border-radius: 50%;
+}
+
+/* --- TabPanel --- */
+.bit-tabpanel {
+  font-family: inherit;
+}
+.bit-tabpanel__tabs {
+  display: flex;
+  gap: 2px;
+}
+.bit-tabpanel__tab {
+  --corner-cut: 3px;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  padding: 0;
+  background-color: var(--1bit-fg);
+  color: var(--1bit-bg);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  top: var(--1bit-border-width);
+  display: inline-flex;
+  align-items: center;
+  clip-path: polygon(
+    var(--corner-cut) 0,
+    calc(100% - var(--corner-cut)) 0,
+    100% var(--corner-cut),
+    100% 100%,
+    0 100%,
+    0 var(--corner-cut)
+  );
+}
+.bit-tabpanel__tab-inner {
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+}
+.bit-tabpanel__tab:hover:not(.bit-tabpanel__tab--active) {
+  opacity: 0.8;
+}
+.bit-tabpanel__tab--active {
+  z-index: 1;
+}
+.bit-tabpanel__tab--active .bit-tabpanel__tab-inner {
+  --inner-cut: 2px;
+  background-color: var(--1bit-bg);
+  color: var(--1bit-fg);
+  margin: 1px 1px 0 1px;
+  clip-path: polygon(
+    var(--inner-cut) 0,
+    calc(100% - var(--inner-cut)) 0,
+    100% var(--inner-cut),
+    100% 100%,
+    0 100%,
+    0 var(--inner-cut)
+  );
+}
+.bit-tabpanel__content {
+  border: var(--1bit-border-width) solid var(--1bit-fg);
+  padding: 6px;
+  background-color: var(--1bit-bg);
+  font-size: inherit;
 }

@@ -1,15 +1,13 @@
 import React from 'react'
-import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { selectCurrentlyPlaying, play, pause } from '../reducers/matrix';
+import { useTransport } from '../contexts/TransportContext';
 
 const PlayPause = () => {
-  const currentlyPlaying: boolean = useAppSelector(selectCurrentlyPlaying);
-  const dispatch = useAppDispatch();
+  const { isPlaying, play, pause } = useTransport();
   const handlePlayback = () => {
-    if (!currentlyPlaying) {
-      dispatch(play());
+    if (!isPlaying) {
+      play();
     } else {
-      dispatch(pause());
+      pause();
     }
   }
   return (
